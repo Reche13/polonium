@@ -4,6 +4,7 @@ import { Dot, X } from "lucide-react";
 import Modal from "../modals/Modal";
 import { useState } from "react";
 import { methodColors } from "@/constants/request";
+import { Input } from "../primitives/Input";
 
 interface Props {
   id: string;
@@ -93,7 +94,7 @@ const ActiveRequestTab = ({
         secondaryAction={handleTitleCancel}
         secondaryActionTitle="Cancel"
       >
-        <input
+        <Input
           type="text"
           value={newTitle}
           onChange={(e) => setNewtitle(e.target.value)}
