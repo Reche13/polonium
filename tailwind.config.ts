@@ -10,7 +10,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#A855F7",
+        primary: "#6366F1",
         bg: {
           light: {
             pri: "#FEFEFE",
@@ -18,7 +18,7 @@ export default {
             ter: "#E8E8E8",
           },
           dark: {
-            pri: "#202020",
+            pri: "#181818",
             sec: "#252525",
             ter: "#2E2E2E",
           },
