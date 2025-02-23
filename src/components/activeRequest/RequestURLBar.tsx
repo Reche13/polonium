@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { Button } from "../primitives/Button";
 import {
   Select,
@@ -9,12 +9,31 @@ import {
 } from "../primitives/Select";
 import { Input } from "../primitives/Input";
 import { methodColors, methods } from "@/constants/request";
+import { useRequestTabStore } from "@/stores/RequestTabStore";
 
 const RequestURLBar = () => {
+  const { activeTabId, tabs, editTab } = useRequestTabStore();
+  const activeRequest = tabs.find((req) => req.id === activeTabId);
+
+  const handleMethodChange = (value: Method) => {
+    editTab(activeTabId, {
+      method: value,
+    });
+  };
+
+  const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
+    editTab(activeTabId, {
+      url: e.target.value,
+    });
+  };
+
   return (
     <div className="w-full flex gap-2">
       <div className="border border-stroke-light-ter dark:border-stroke-dark-ter rounded-lg flex items-center w-full  bg-bg-light-sec dark:bg-bg-dark-sec">
-        <Select defaultValue={methods[0]}>
+        <Select
+          value={activeRequest?.method}
+          onValueChange={handleMethodChange}
+        >
           <SelectTrigger className="w-[120px] px-4 py-2 border-y-0 border-l-0 rounded-none border-r border-stroke-light-ter dark:border-stroke-dark-ter  text-xs font-semibold flex gap-1 items-center">
             <SelectValue
               placeholder="Method"
@@ -37,6 +56,8 @@ const RequestURLBar = () => {
         {/* INPUT */}
         <Input
           type="text"
+          value={activeRequest?.url}
+          onChange={handleUrlChange}
           placeholder="Enter a URL"
           className="text-xs text-text-b-pri border-none dark:text-text-w-pri px-4 py-2  outline-none w-full"
         />

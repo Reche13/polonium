@@ -9,7 +9,7 @@ interface RequestTab {
 
 interface RequestTabStore {
   tabs: RequestTab[];
-  activeTabId: string | null;
+  activeTabId: string;
   addTab: (tab: Omit<RequestTab, "id">) => void;
   removeTab: (id: string) => void;
   setActiveTab: (id: string) => void;
