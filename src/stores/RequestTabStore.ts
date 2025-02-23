@@ -4,6 +4,7 @@ interface RequestTab {
   id: string;
   title: string;
   method: Method;
+  url: string;
 }
 
 interface RequestTabStore {
@@ -21,6 +22,7 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
       id: "default-tab",
       title: "Untitled",
       method: "GET",
+      url: "https://jsonplaceholder.typicode.com/todos/1",
     },
   ],
   activeTabId: "default-tab",

@@ -49,6 +49,7 @@ const ActiveRequestTab = ({
   return (
     <div
       onClick={() => setActiveTab(id)}
+      onDoubleClick={() => setModalOpen(true)}
       className={cn(
         "relative cursor-pointer py-4 px-3 w-[180px] flex items-center justify-between gap-2 group bg-bg-light-sec dark:bg-bg-dark-sec ",
         active
@@ -60,7 +61,10 @@ const ActiveRequestTab = ({
         <div className="absolute top-0 left-0 right-0 w-full h-[2px] bg-primary" />
       )}
       <div className="flex items-center gap-3 w-[80%]">
-        <span style={{ color }} className="text-[10px] font-semibold">
+        <span
+          style={{ color }}
+          className="text-[10px] font-semibold select-none"
+        >
           {method}
         </span>
         <p
