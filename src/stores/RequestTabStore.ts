@@ -1,6 +1,12 @@
 import { create } from "zustand";
 
-type RowType = { id: string; [key: string]: string };
+type RowType = {
+  id: string;
+  key: string;
+  value: string;
+  description?: string;
+  active: boolean;
+};
 
 interface RequestTab {
   id: string;
@@ -36,7 +42,15 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
       method: "GET",
       url: "https://jsonplaceholder.typicode.com/todos/1",
       selectedOptionNav: "PARAMS",
-      queryParams: [{ id: crypto.randomUUID(), key: "", value: "" }],
+      queryParams: [
+        {
+          id: crypto.randomUUID(),
+          key: "",
+          value: "",
+          description: "",
+          active: true,
+        },
+      ],
     },
   ],
   activeTabId: "default-tab",
