@@ -17,3 +17,25 @@ export const methods: Method[] = [
   "HEAD",
   "OPTIONS",
 ];
+
+export const requestOptionsNav: {
+  label: string;
+  OptionsNav: OptionsNav;
+}[] = [
+  {
+    label: "Parameters",
+    OptionsNav: "PARAMS",
+  },
+  {
+    label: "Body",
+    OptionsNav: "BODY",
+  },
+  {
+    label: "Headers",
+    OptionsNav: "HEADERS",
+  },
+  {
+    label: "Authorization",
+    OptionsNav: "AUTH",
+  },
+];

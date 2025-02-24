@@ -28,7 +28,7 @@ const RequestURLBar = () => {
   };
 
   return (
-    <div className="w-full flex gap-2">
+    <div className="w-full flex gap-2 p-4">
       <div className="border border-stroke-light-ter dark:border-stroke-dark-ter rounded-lg flex items-center w-full  bg-bg-light-sec dark:bg-bg-dark-sec">
         <Select
           value={activeRequest?.method}

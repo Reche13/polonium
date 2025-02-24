@@ -7,3 +7,5 @@ type RequestProps = {
 };
 
 type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS";
+
+type OptionsNav = "PARAMS" | "BODY" | "HEADERS" | "AUTH";

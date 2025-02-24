@@ -1,10 +1,14 @@
 import { create } from "zustand";
 
+type RowType = { id: string; [key: string]: string };
+
 interface RequestTab {
   id: string;
   title: string;
   method: Method;
   url: string;
+  selectedOptionNav: OptionsNav;
+  queryParams?: RowType[];
 }
 
 interface RequestTabStore {
@@ -14,6 +18,14 @@ interface RequestTabStore {
   removeTab: (id: string) => void;
   setActiveTab: (id: string) => void;
   editTab: (id: string, updates: Partial<Omit<RequestTab, "id">>) => void;
+  setQueryParams: (tabId: string, rows: RowType[]) => void;
+  updateQueryParam: (
+    tabId: string,
+    id: string,
+    key: string,
+    value: string
+  ) => void;
+  moveQueryParam: (tabId: string, fromIndex: number, toIndex: number) => void;
 }
 
 export const useRequestTabStore = create<RequestTabStore>((set) => ({
@@ -23,6 +35,8 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
       title: "Untitled",
       method: "GET",
       url: "https://jsonplaceholder.typicode.com/todos/1",
+      selectedOptionNav: "PARAMS",
+      queryParams: [{ id: crypto.randomUUID(), key: "", value: "" }],
     },
   ],
   activeTabId: "default-tab",
@@ -62,4 +76,39 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
     }),
 
   setActiveTab: (id) => set(() => ({ activeTabId: id })),
+
+  // QUERY PARAMS
+  setQueryParams: (tabId, rows) =>
+    set((state) => ({
+      tabs: state.tabs.map((tab) =>
+        tab.id === tabId ? { ...tab, queryParams: rows } : tab
+      ),
+    })),
+
+  updateQueryParam: (tabId, id, key, value) =>
+    set((state) => ({
+      tabs: state.tabs.map((tab) =>
+        tab.id === tabId
+          ? {
+              ...tab,
+              queryParams: tab.queryParams?.map((row) =>
+                row.id === id ? { ...row, [key]: value } : row
+              ),
+            }
+          : tab
+      ),
+    })),
+
+  moveQueryParam: (tabId, fromIndex, toIndex) =>
+    set((state) => ({
+      tabs: state.tabs.map((tab) => {
+        if (tab.id !== tabId) return tab;
+
+        const newRows = [...tab.queryParams!!];
+        const [movedItem] = newRows.splice(fromIndex, 1);
+        newRows.splice(toIndex, 0, movedItem);
+
+        return { ...tab, queryParams: newRows };
+      }),
+    })),
 }));
