@@ -105,7 +105,7 @@ const QueryParamsTable = () => {
             />
           </div>
           <div
-            className="p-2 cursor-pointer"
+            className="p-2 cursor-pointer select-none"
             onClick={() => changeActivity(param.id)}
             onPointerDownCapture={(e) => e.stopPropagation()}
           >
