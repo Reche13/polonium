@@ -5,15 +5,15 @@ import { DragEndEvent } from "@dnd-kit/core";
 import { CircleCheckBig, Trash } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-const QueryParamsTable = () => {
-  const { activeTabId, tabs, moveQueryParam, editTab } = useRequestTabStore();
+const HeadersTable = () => {
+  const { activeTabId, tabs, moveHeader, editTab } = useRequestTabStore();
   const activeTab = tabs.find((req) => req.id === activeTabId);
-  const queryParams = activeTab?.queryParams || [];
+  const headers = activeTab?.headers || [];
 
-  const ensureEmptyRow = (queryParams: any[]) => {
-    const lastRow = queryParams[queryParams.length - 1];
+  const ensureEmptyRow = (headers: any[]) => {
+    const lastRow = headers[headers.length - 1];
     if (lastRow && lastRow.key.trim() !== "") {
-      queryParams.push({
+      headers.push({
         id: crypto.randomUUID(),
         key: "",
         value: "",
@@ -25,55 +25,55 @@ const QueryParamsTable = () => {
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over || active.id === over.id) return;
-    const fromIndex = queryParams.findIndex((r) => r.id === active.id);
-    const toIndex = queryParams.findIndex((r) => r.id === over.id);
+    const fromIndex = headers.findIndex((r) => r.id === active.id);
+    const toIndex = headers.findIndex((r) => r.id === over.id);
     if (fromIndex !== -1 && toIndex !== -1) {
-      moveQueryParam(activeTabId, fromIndex, toIndex);
+      moveHeader(activeTabId, fromIndex, toIndex);
 
       setTimeout(() => {
-        const updatedQueryParams =
+        const updatedHeaders =
           useRequestTabStore
             .getState()
-            .tabs.find((req) => req.id === activeTabId)?.queryParams || [];
+            .tabs.find((req) => req.id === activeTabId)?.headers || [];
 
-        ensureEmptyRow(updatedQueryParams);
-        editTab(activeTabId, { queryParams: updatedQueryParams });
+        ensureEmptyRow(updatedHeaders);
+        editTab(activeTabId, { headers: updatedHeaders });
       }, 0);
     }
   };
 
   const handleChange = (id: string, key: string, value: string) => {
-    const updatedQueryParams = queryParams.map((row) =>
+    const updatedHeaders = headers.map((row) =>
       row.id === id ? { ...row, [key]: value } : row
     );
-    ensureEmptyRow(updatedQueryParams);
-    editTab(activeTabId, { queryParams: updatedQueryParams });
+    ensureEmptyRow(updatedHeaders);
+    editTab(activeTabId, { headers: updatedHeaders });
   };
 
   const changeActivity = (id: string) => {
     editTab(activeTabId, {
-      queryParams: queryParams.map((param) =>
-        param.id === id ? { ...param, active: !param.active } : param
+      headers: headers.map((header) =>
+        header.id === id ? { ...header, active: !header.active } : header
       ),
     });
   };
 
-  const deleteParam = (id: string) => {
+  const deleteHeader = (id: string) => {
     editTab(activeTabId, {
-      queryParams: queryParams.filter((param) => param.id !== id),
+      headers: headers.filter((header) => header.id !== id),
     });
   };
 
   return (
-    <DraggableTable handleDragEnd={handleDragEnd} rows={queryParams}>
-      {queryParams.map((param) => (
-        <Row key={param.id} id={param.id}>
+    <DraggableTable handleDragEnd={handleDragEnd} rows={headers}>
+      {headers.map((header) => (
+        <Row key={header.id} id={header.id}>
           <div className="p-2 flex flex-1">
             <input
               type="text"
               placeholder="Key"
-              value={param.key}
-              onChange={(e) => handleChange(param.id, "key", e.target.value)}
+              value={header.key}
+              onChange={(e) => handleChange(header.id, "key", e.target.value)}
               onPointerDownCapture={(e) => e.stopPropagation()}
               spellCheck={false}
               className="bg-transparent text-xs font-medium text-text-b-pri dark:text-text-w-pri outline-none w-full"
@@ -83,8 +83,8 @@ const QueryParamsTable = () => {
             <input
               type="text"
               placeholder="Value"
-              value={param.value}
-              onChange={(e) => handleChange(param.id, "value", e.target.value)}
+              value={header.value}
+              onChange={(e) => handleChange(header.id, "value", e.target.value)}
               onPointerDownCapture={(e) => e.stopPropagation()}
               spellCheck={false}
               className="bg-transparent text-xs font-medium text-text-b-pri dark:text-text-w-pri outline-none w-full"
@@ -94,9 +94,9 @@ const QueryParamsTable = () => {
             <input
               type="text"
               placeholder="Description"
-              value={param.description}
+              value={header.description}
               onChange={(e) =>
-                handleChange(param.id, "description", e.target.value)
+                handleChange(header.id, "description", e.target.value)
               }
               onPointerDownCapture={(e) => e.stopPropagation()}
               spellCheck={false}
@@ -105,17 +105,17 @@ const QueryParamsTable = () => {
           </div>
           <div
             className="p-2 cursor-pointer select-none"
-            onClick={() => changeActivity(param.id)}
+            onClick={() => changeActivity(header.id)}
             onPointerDownCapture={(e) => e.stopPropagation()}
           >
             <CircleCheckBig
               size={16}
-              className={cn(param.active ? "text-green-600" : "text-gray-500")}
+              className={cn(header.active ? "text-green-600" : "text-gray-500")}
             />
           </div>
           <div
             className="p-2 cursor-pointer"
-            onClick={() => deleteParam(param.id)}
+            onClick={() => deleteHeader(header.id)}
             onPointerDownCapture={(e) => e.stopPropagation()}
           >
             <Trash size={16} className="text-red-600" />
@@ -126,4 +126,4 @@ const QueryParamsTable = () => {
   );
 };
 
-export default QueryParamsTable;
+export default HeadersTable;

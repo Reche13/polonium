@@ -41,7 +41,9 @@ export const DraggableTable = ({ handleDragEnd, rows, children }: Props) => {
       modifiers={[restrictToVerticalAxis]}
     >
       <SortableContext items={rows} strategy={verticalListSortingStrategy}>
-        <div className="divide-y border">{children}</div>
+        <div className="divide-y divide-stroke-light-ter dark:divide-stroke-dark-ter border-b border-stroke-light-ter dark:border-stroke-dark-ter">
+          {children}
+        </div>
       </SortableContext>
     </DndContext>
   );
@@ -65,7 +67,7 @@ export const Row = ({ id, children }: RowProps) => {
       ref={setNodeRef}
       {...listeners}
       style={style}
-      className="flex items-center divide-x bg-bg-light-pri dark:bg-bg-dark-pri group"
+      className="flex items-center divide-x divide-stroke-light-ter dark:divide-stroke-dark-ter bg-bg-light-pri dark:bg-bg-dark-pri group"
     >
       {/* Drag Handle */}
       <div

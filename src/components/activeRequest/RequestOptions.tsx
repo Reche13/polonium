@@ -2,6 +2,7 @@ import { useRequestTabStore } from "@/stores/RequestTabStore";
 import React from "react";
 import RequestOptionsHeader from "./RequestOptionsHeader";
 import Parameters from "../requestOptions/Parameters";
+import Headers from "../requestOptions/Headers";
 
 const RequestOptions = () => {
   const { activeTabId, tabs, editTab } = useRequestTabStore();
@@ -20,6 +21,7 @@ const RequestOptions = () => {
         changeOptionTab={changeOptionTab}
       />
       {activeRequest?.selectedOptionNav === "PARAMS" && <Parameters />}
+      {activeRequest?.selectedOptionNav === "HEADERS" && <Headers />}
     </div>
   );
 };

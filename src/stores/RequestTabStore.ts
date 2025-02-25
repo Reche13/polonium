@@ -15,6 +15,7 @@ interface RequestTab {
   url: string;
   selectedOptionNav: OptionsNav;
   queryParams?: RowType[];
+  headers?: RowType[];
 }
 
 interface RequestTabStore {
@@ -24,14 +25,8 @@ interface RequestTabStore {
   removeTab: (id: string) => void;
   setActiveTab: (id: string) => void;
   editTab: (id: string, updates: Partial<Omit<RequestTab, "id">>) => void;
-  setQueryParams: (tabId: string, rows: RowType[]) => void;
-  updateQueryParam: (
-    tabId: string,
-    id: string,
-    key: string,
-    value: string
-  ) => void;
   moveQueryParam: (tabId: string, fromIndex: number, toIndex: number) => void;
+  moveHeader: (tabId: string, fromIndex: number, toIndex: number) => void;
 }
 
 export const useRequestTabStore = create<RequestTabStore>((set) => ({
@@ -43,6 +38,15 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
       url: "https://jsonplaceholder.typicode.com/todos/1",
       selectedOptionNav: "PARAMS",
       queryParams: [
+        {
+          id: crypto.randomUUID(),
+          key: "",
+          value: "",
+          description: "",
+          active: true,
+        },
+      ],
+      headers: [
         {
           id: crypto.randomUUID(),
           key: "",
@@ -91,28 +95,6 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
 
   setActiveTab: (id) => set(() => ({ activeTabId: id })),
 
-  // QUERY PARAMS
-  setQueryParams: (tabId, rows) =>
-    set((state) => ({
-      tabs: state.tabs.map((tab) =>
-        tab.id === tabId ? { ...tab, queryParams: rows } : tab
-      ),
-    })),
-
-  updateQueryParam: (tabId, id, key, value) =>
-    set((state) => ({
-      tabs: state.tabs.map((tab) =>
-        tab.id === tabId
-          ? {
-              ...tab,
-              queryParams: tab.queryParams?.map((row) =>
-                row.id === id ? { ...row, [key]: value } : row
-              ),
-            }
-          : tab
-      ),
-    })),
-
   moveQueryParam: (tabId, fromIndex, toIndex) =>
     set((state) => ({
       tabs: state.tabs.map((tab) => {
@@ -123,6 +105,19 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
         newRows.splice(toIndex, 0, movedItem);
 
         return { ...tab, queryParams: newRows };
+      }),
+    })),
+
+  moveHeader: (tabId, fromIndex, toIndex) =>
+    set((state) => ({
+      tabs: state.tabs.map((tab) => {
+        if (tab.id !== tabId) return tab;
+
+        const newRows = [...tab.headers!!];
+        const [movedItem] = newRows.splice(fromIndex, 1);
+        newRows.splice(toIndex, 0, movedItem);
+
+        return { ...tab, headers: newRows };
       }),
     })),
 }));

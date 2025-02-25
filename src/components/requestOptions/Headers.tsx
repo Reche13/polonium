@@ -1,15 +1,15 @@
 import React from "react";
-import QueryParamsTable from "../tables/QueryParamsTable";
+import HeadersTable from "../tables/HeadersTable";
 import { Plus, Trash2 } from "lucide-react";
 import { useRequestTabStore } from "@/stores/RequestTabStore";
 
-const Parameters = () => {
+const Headers = () => {
   const { activeTabId, tabs, editTab } = useRequestTabStore();
   const activeTab = tabs.find((req) => req.id === activeTabId);
-  const queryParams = activeTab?.queryParams || [];
+  const headers = activeTab?.headers || [];
 
   const addRow = () => {
-    queryParams.push({
+    headers.push({
       id: crypto.randomUUID(),
       key: "",
       value: "",
@@ -17,13 +17,13 @@ const Parameters = () => {
       active: true,
     });
     editTab(activeTabId, {
-      queryParams: queryParams,
+      headers: headers,
     });
   };
 
   const deleteAllRows = () => {
     editTab(activeTabId, {
-      queryParams: [
+      headers: [
         {
           id: crypto.randomUUID(),
           key: "",
@@ -39,7 +39,7 @@ const Parameters = () => {
     <div className="w-full">
       <div className="flex items-center justify-between border-b border-stroke-light-ter dark:border-stroke-dark-ter pl-4">
         <span className="text-xs font-medium text-text-b-sec dark:text-text-w-sec">
-          Query Parameters
+          Headers List
         </span>
         <div className="flex">
           <div
@@ -60,9 +60,9 @@ const Parameters = () => {
           </div>
         </div>
       </div>
-      <QueryParamsTable />
+      <HeadersTable />
     </div>
   );
 };
 
-export default Parameters;
+export default Headers;
