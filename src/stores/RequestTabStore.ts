@@ -16,6 +16,8 @@ interface RequestTab {
   selectedOptionNav: OptionsNav;
   queryParams?: RowType[];
   headers?: RowType[];
+  bodyType: BodyType;
+  body?: string;
 }
 
 interface RequestTabStore {
@@ -55,6 +57,7 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
           active: true,
         },
       ],
+      bodyType: "none",
     },
   ],
   activeTabId: "default-tab",

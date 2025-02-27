@@ -14,3 +14,15 @@ html,
 body {
   width: 100%;
 }
+
+.custom-editor .cm-editor {
+  font-family: "Roboto Mono", monospace !important;
+}
+
+.custom-editor .cm-content {
+  font-family: "Roboto Mono", monospace !important;
+}
+
+.cm-editor.cm-focused {
+  outline: none !important;
+}

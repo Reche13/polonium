@@ -27,6 +27,10 @@ const RequestURLBar = () => {
     });
   };
 
+  const printReq = () => {
+    console.log(activeRequest);
+  };
+
   return (
     <div className="w-full flex gap-2 p-4">
       <div className="border border-stroke-light-ter dark:border-stroke-dark-ter rounded-lg flex items-center w-full  bg-bg-light-sec dark:bg-bg-dark-sec">
@@ -62,7 +66,7 @@ const RequestURLBar = () => {
           className="text-xs text-text-b-pri border-none dark:text-text-w-pri px-4 py-2  outline-none w-full"
         />
       </div>
-      <Button>Send</Button>
+      <Button onClick={printReq}>Send</Button>
     </div>
   );
 };

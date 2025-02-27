@@ -18,6 +18,13 @@ export const methods: Method[] = [
   "OPTIONS",
 ];
 
+export const bodyTypes: BodyType[] = [
+  "none",
+  "application/json",
+  "application/xml",
+  "text/plain",
+];
+
 export const requestOptionsNav: {
   label: string;
   OptionsNav: OptionsNav;

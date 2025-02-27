@@ -12,6 +12,7 @@ const ActiveRequestHead = () => {
       title: "Untitled",
       url: "",
       selectedOptionNav: "PARAMS",
+      bodyType: "none",
     });
   };
   return (
