@@ -16,11 +16,12 @@ const RequestOptions = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       <RequestOptionsHeader
         selectedOptionTab={activeRequest?.selectedOptionNav!!}
         changeOptionTab={changeOptionTab}
       />
+
       {activeRequest?.selectedOptionNav === "PARAMS" && <Parameters />}
       {activeRequest?.selectedOptionNav === "BODY" && <Body />}
       {activeRequest?.selectedOptionNav === "HEADERS" && <Headers />}

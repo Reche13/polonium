@@ -59,7 +59,9 @@ const Body = () => {
         <div className="flex"></div>
       </div>
       {/* BODY */}
-      <BodyEditor value={activeTab?.body ?? ""} onChange={handleBodyChange} />
+      <div className="border">
+        <BodyEditor value={activeTab?.body ?? ""} onChange={handleBodyChange} />
+      </div>
     </div>
   );
 };

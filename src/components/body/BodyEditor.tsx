@@ -75,7 +75,8 @@ const BodyEditor = ({ value, onChange }: Props) => {
       value={value}
       extensions={[json(), myFoldGutter, EditorView.lineWrapping]}
       onChange={onChange}
-      height="300px"
+      height="30"
+      maxHeight="400px"
       className={cn(
         "text-[12px] font-medium text-text-w-pri",
         robotoMono.className

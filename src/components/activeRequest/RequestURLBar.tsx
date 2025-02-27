@@ -33,7 +33,7 @@ const RequestURLBar = () => {
 
   return (
     <div className="w-full flex gap-2 p-4">
-      <div className="border border-stroke-light-ter dark:border-stroke-dark-ter rounded-lg flex items-center w-full  bg-bg-light-sec dark:bg-bg-dark-sec">
+      <div className="border border-stroke-light-ter dark:border-stroke-dark-ter rounded-lg flex items-center w-full  bg-bg-light-sec dark:bg-bg-dark-sec overflow-hidden">
         <Select
           value={activeRequest?.method}
           onValueChange={handleMethodChange}
@@ -44,7 +44,7 @@ const RequestURLBar = () => {
               className=" text-text-b-pri dark:text-text-w-pri"
             />
           </SelectTrigger>
-          <SelectContent className="bg-bg-light-pri dark:bg-bg-dark-pri border border-stroke-light-ter dark:border-stroke-dark-ter shadow-lg">
+          <SelectContent className="bg-bg-light-pri dark:bg-bg-dark-pri border-0 h-full border-stroke-light-ter dark:border-stroke-dark-ter shadow-lg">
             {methods.map((method, index) => (
               <SelectItem
                 style={{ color: methodColors[method] }}
@@ -63,7 +63,7 @@ const RequestURLBar = () => {
           value={activeRequest?.url}
           onChange={handleUrlChange}
           placeholder="Enter a URL"
-          className="text-xs text-text-b-pri border-none dark:text-text-w-pri px-4 py-2  outline-none w-full"
+          className="text-xs text-text-b-pri border-none rounded-l-none bg-transparent h-full dark:text-text-w-pri px-4 py-2  outline-none w-full"
         />
       </div>
       <Button onClick={printReq}>Send</Button>
