@@ -12,7 +12,7 @@ const RequestOptionsHeader = ({
   changeOptionTab,
 }: Props) => {
   return (
-    <div className="flex border-b border-stroke-light-ter dark:border-stroke-dark-ter">
+    <div className="flex shrink-0 border-b border-stroke-light-ter dark:border-stroke-dark-ter">
       {requestOptionsNav.map((navItem, index) => (
         <div
           key={index}

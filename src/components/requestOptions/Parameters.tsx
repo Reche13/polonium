@@ -36,7 +36,7 @@ const Parameters = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full flex flex-col">
       <div className="flex items-center justify-between border-b border-stroke-light-ter dark:border-stroke-dark-ter pl-4">
         <span className="text-xs font-medium text-text-b-sec dark:text-text-w-sec">
           Query Parameters
@@ -60,7 +60,9 @@ const Parameters = () => {
           </div>
         </div>
       </div>
-      <QueryParamsTable />
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <QueryParamsTable />
+      </div>
     </div>
   );
 };

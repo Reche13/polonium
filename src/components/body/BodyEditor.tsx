@@ -27,6 +27,7 @@ const myFoldGutter = foldGutter({
 const customTheme = EditorView.theme({
   "&": {
     fontFamily: `"Roboto Mono", monospace !important`,
+    height: "100% !important",
   },
   ".cm-scroller": {
     fontFamily: `"Roboto Mono", monospace !important`,
@@ -75,8 +76,7 @@ const BodyEditor = ({ value, onChange }: Props) => {
       value={value}
       extensions={[json(), myFoldGutter, EditorView.lineWrapping]}
       onChange={onChange}
-      height="30"
-      maxHeight="400px"
+      minHeight="10px"
       className={cn(
         "text-[12px] font-medium text-text-w-pri",
         robotoMono.className

@@ -17,15 +17,12 @@ export default function Home() {
         <div className="w-full h-full flex flex-col">
           <RequestURLBar />
           <div className="flex-1">
-            <ResizablePanelGroup
-              direction="horizontal"
-              className="w-full h-full"
-            >
-              <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
+            <ResizablePanelGroup direction="vertical" className="w-full h-full">
+              <ResizablePanel defaultSize={80} minSize={20} maxSize={80}>
                 <RequestOptions />
               </ResizablePanel>
               <ResizableHandle />
-              <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
+              <ResizablePanel defaultSize={20} minSize={20} maxSize={80}>
                 <div className="bg-bg-light-pri dark:bg-bg-dark-pri  h-full">
                   Response
                 </div>

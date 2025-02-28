@@ -27,7 +27,7 @@ const Body = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full flex flex-col">
       <div className="flex items-center gap-4 border-b border-stroke-light-ter dark:border-stroke-dark-ter pl-4">
         <span className="text-xs font-medium text-text-b-sec dark:text-text-w-sec">
           Content Type
@@ -59,7 +59,7 @@ const Body = () => {
         <div className="flex"></div>
       </div>
       {/* BODY */}
-      <div className="border">
+      <div className="flex-1 overflow-y-auto">
         <BodyEditor value={activeTab?.body ?? ""} onChange={handleBodyChange} />
       </div>
     </div>
