@@ -8,6 +8,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/primitives/Resizable";
+import Response from "@/components/response/Response";
 
 export default function Home() {
   return (
@@ -23,9 +24,7 @@ export default function Home() {
               </ResizablePanel>
               <ResizableHandle />
               <ResizablePanel defaultSize={20} minSize={20} maxSize={80}>
-                <div className="bg-bg-light-pri dark:bg-bg-dark-pri  h-full">
-                  Response
-                </div>
+                <Response />
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
