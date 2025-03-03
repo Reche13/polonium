@@ -18,6 +18,15 @@ interface RequestTab {
   headers?: RowType[];
   bodyType: BodyType;
   body?: string;
+  requestState: "NOT_STARTED" | "PENDING" | "COMPLETE" | "FAILED";
+  SelectedResponseNav: ResponseNav;
+  responseData?: string;
+  responseDataType?: ResponseDataType;
+  responseHeaders?: Record<string, string>[];
+  responseTime?: number;
+  responseStatus?: number;
+  responseStatusText?: string;
+  responseSize?: number;
 }
 
 interface RequestTabStore {
@@ -58,6 +67,8 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
         },
       ],
       bodyType: "none",
+      requestState: "NOT_STARTED",
+      SelectedResponseNav: "PRINT",
     },
   ],
   activeTabId: "default-tab",

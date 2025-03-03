@@ -13,6 +13,8 @@ const ActiveRequestHead = () => {
       url: "",
       selectedOptionNav: "PARAMS",
       bodyType: "none",
+      requestState: "NOT_STARTED",
+      SelectedResponseNav: "PRINT",
     });
   };
   return (

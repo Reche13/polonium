@@ -11,3 +11,7 @@ type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS";
 type OptionsNav = "PARAMS" | "BODY" | "HEADERS" | "AUTH";
 
 type BodyType = "none" | "application/json" | "application/xml" | "text/plain";
+
+type ResponseNav = "PRINT" | "RAW" | "HEADERS";
+
+type ResponseDataType = "TEXT" | "JSON" | "XML" | "HTML" | "FORM" | "BINARY";
