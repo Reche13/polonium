@@ -71,7 +71,8 @@ export default function useRequest(id: string) {
       });
 
       const dataFromRes = await res.json();
-      console.log(dataFromRes);
+      if (dataFromRes.status === "REQUEST_FAILED")
+        throw new Error("Request Failed: " + dataFromRes.error);
 
       editTab(id, {
         requestState: "COMPLETE",
@@ -84,6 +85,7 @@ export default function useRequest(id: string) {
         responseTime: dataFromRes.timeTaken,
       });
     } catch (error) {
+      console.log("ERROR", error);
       editTab(id, {
         requestState: "FAILED",
       });

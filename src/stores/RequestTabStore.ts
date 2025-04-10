@@ -77,7 +77,31 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
     set((state) => {
       const id = crypto.randomUUID();
       return {
-        tabs: [...state.tabs, { id, ...tab }],
+        tabs: [
+          ...state.tabs,
+          {
+            id,
+            ...tab,
+            headers: [
+              {
+                id: crypto.randomUUID(),
+                key: "",
+                value: "",
+                description: "",
+                active: true,
+              },
+            ],
+            queryParams: [
+              {
+                id: crypto.randomUUID(),
+                key: "",
+                value: "",
+                description: "",
+                active: true,
+              },
+            ],
+          },
+        ],
         activeTabId: id,
       };
     }),

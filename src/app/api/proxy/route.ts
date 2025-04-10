@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("Error:", error);
     return NextResponse.json({
-      status: "fail",
+      status: "REQUEST_FAILED",
       error: error.message,
     });
   }
@@ -47,7 +47,8 @@ async function handleResponse(response: Response) {
   let type: string = "unknown";
 
   if (!response.ok) {
-    throw new Error(`HTTP Error! Status: ${response.status}`);
+    // throw new Error(`HTTP Error! Status: ${response.status}`);
+    return { data: "{}", type: "JSON" };
   }
 
   if (contentType) {
