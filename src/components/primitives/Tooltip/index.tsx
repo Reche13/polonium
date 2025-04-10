@@ -8,13 +8,14 @@ import {
 
 interface Props {
   content: string;
+  delay?: number;
   children: React.ReactNode;
 }
 
-const Tooltip = ({ content, children }: Props) => {
+const Tooltip = ({ content, delay = 0, children }: Props) => {
   return (
     <TooltipProvider>
-      <TooltipLegacy>
+      <TooltipLegacy delayDuration={delay}>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent>
           <p>{content}</p>

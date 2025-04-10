@@ -9,11 +9,7 @@ const TooltipProvider = TooltipPrimitive.Provider;
 
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
-const Tooltip = ({ children, ...props }: TooltipPrimitive.TooltipProps) => (
-  <TooltipPrimitive.Root delayDuration={0} {...props}>
-    {children}
-  </TooltipPrimitive.Root>
-);
+const Tooltip = TooltipPrimitive.Root;
 
 const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
