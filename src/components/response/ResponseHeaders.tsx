@@ -1,6 +1,6 @@
 import { Copy } from "lucide-react";
 import React from "react";
-import { Tooltip } from "../primitives/Tooltip";
+import Tooltip from "../primitives/Tooltip";
 
 interface Props {
   headers: Record<string, string>[];
@@ -44,12 +44,14 @@ const ResponseHeaders = ({ headers }: Props) => {
             <div className="px-4 py-2 text-xs font-medium truncate">
               {header.value}
             </div>
-            <button
-              onClick={() => copySingleHeader(header.value)}
-              className="absolute right-4 top-2 bg-none outline-none border-none opacity-0 group-hover:opacity-100 transition duration-75 text-text-b-sec dark:text-text-w-sec"
-            >
-              <Copy size={16} />
-            </button>
+            <Tooltip content="Copy">
+              <button
+                onClick={() => copySingleHeader(header.value)}
+                className="absolute right-4 top-2 bg-none outline-none border-none opacity-0 group-hover:opacity-100 transition duration-75 text-text-b-sec dark:text-text-w-sec"
+              >
+                <Copy size={16} />
+              </button>
+            </Tooltip>
           </div>
         ))}
       </div>
