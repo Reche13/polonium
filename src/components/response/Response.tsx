@@ -37,10 +37,7 @@ const Response = () => {
             />
           )}
           {activeRequest.SelectedResponseNav === "RAW" && (
-            <ResponseBody
-              type="TEXT"
-              data={JSON.stringify(activeRequest.responseData, null, 2) ?? ""}
-            />
+            <ResponseBody type="TEXT" data={activeRequest.responseData ?? ""} />
           )}
           {activeRequest.SelectedResponseNav === "HEADERS" && (
             <ResponseHeaders headers={activeRequest.responseHeaders ?? []} />
