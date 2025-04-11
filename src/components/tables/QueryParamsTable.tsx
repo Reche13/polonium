@@ -4,6 +4,7 @@ import { DraggableTable, Row } from "./DraggableTable";
 import { DragEndEvent } from "@dnd-kit/core";
 import { CircleCheckBig, Trash } from "lucide-react";
 import { cn } from "@/lib/cn";
+import Tooltip from "../primitives/Tooltip";
 
 const QueryParamsTable = () => {
   const { activeTabId, tabs, moveQueryParam, editTab } = useRequestTabStore();
@@ -103,23 +104,31 @@ const QueryParamsTable = () => {
               className="bg-transparent text-xs font-medium text-text-b-pri dark:text-text-w-pri outline-none w-full"
             />
           </div>
-          <div
-            className="p-2 cursor-pointer select-none"
-            onClick={() => changeActivity(param.id)}
-            onPointerDownCapture={(e) => e.stopPropagation()}
-          >
-            <CircleCheckBig
-              size={16}
-              className={cn(param.active ? "text-green-600" : "text-gray-500")}
-            />
-          </div>
-          <div
-            className="p-2 cursor-pointer"
-            onClick={() => deleteParam(param.id)}
-            onPointerDownCapture={(e) => e.stopPropagation()}
-          >
-            <Trash size={16} className="text-red-600" />
-          </div>
+          <Tooltip content="Turn off">
+            <div
+              role="button"
+              className="p-2 cursor-pointer select-none"
+              onClick={() => changeActivity(param.id)}
+              onPointerDownCapture={(e) => e.stopPropagation()}
+            >
+              <CircleCheckBig
+                size={16}
+                className={cn(
+                  param.active ? "text-green-600" : "text-gray-500"
+                )}
+              />
+            </div>
+          </Tooltip>
+          <Tooltip content="Remove">
+            <div
+              role="button"
+              className="p-2 cursor-pointer"
+              onClick={() => deleteParam(param.id)}
+              onPointerDownCapture={(e) => e.stopPropagation()}
+            >
+              <Trash size={16} className="text-red-600" />
+            </div>
+          </Tooltip>
         </Row>
       ))}
     </DraggableTable>

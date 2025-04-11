@@ -4,6 +4,7 @@ import { DraggableTable, Row } from "./DraggableTable";
 import { DragEndEvent } from "@dnd-kit/core";
 import { CircleCheckBig, Trash } from "lucide-react";
 import { cn } from "@/lib/cn";
+import Tooltip from "../primitives/Tooltip";
 
 const HeadersTable = () => {
   const { activeTabId, tabs, moveHeader, editTab } = useRequestTabStore();
@@ -103,23 +104,31 @@ const HeadersTable = () => {
               className="bg-transparent text-xs font-medium text-text-b-pri dark:text-text-w-pri outline-none w-full"
             />
           </div>
-          <div
-            className="p-2 cursor-pointer select-none"
-            onClick={() => changeActivity(header.id)}
-            onPointerDownCapture={(e) => e.stopPropagation()}
-          >
-            <CircleCheckBig
-              size={16}
-              className={cn(header.active ? "text-green-600" : "text-gray-500")}
-            />
-          </div>
-          <div
-            className="p-2 cursor-pointer"
-            onClick={() => deleteHeader(header.id)}
-            onPointerDownCapture={(e) => e.stopPropagation()}
-          >
-            <Trash size={16} className="text-red-600" />
-          </div>
+          <Tooltip content="Turn off" delay={500}>
+            <div
+              role="button"
+              className="p-2 cursor-pointer select-none"
+              onClick={() => changeActivity(header.id)}
+              onPointerDownCapture={(e) => e.stopPropagation()}
+            >
+              <CircleCheckBig
+                size={16}
+                className={cn(
+                  header.active ? "text-green-600" : "text-gray-500"
+                )}
+              />
+            </div>
+          </Tooltip>
+          <Tooltip content="Remove" delay={500}>
+            <div
+              role="button"
+              className="p-2 cursor-pointer"
+              onClick={() => deleteHeader(header.id)}
+              onPointerDownCapture={(e) => e.stopPropagation()}
+            >
+              <Trash size={16} className="text-red-600" />
+            </div>
+          </Tooltip>
         </Row>
       ))}
     </DraggableTable>

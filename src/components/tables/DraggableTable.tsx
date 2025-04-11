@@ -17,6 +17,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { GripVertical } from "lucide-react";
 import { ReactNode } from "react";
+import Tooltip from "../primitives/Tooltip";
 
 interface Props {
   handleDragEnd: (e: DragEndEvent) => void;
@@ -70,15 +71,17 @@ export const Row = ({ id, children }: RowProps) => {
       className="flex items-center divide-x divide-stroke-light-ter dark:divide-stroke-dark-ter bg-bg-light-pri dark:bg-bg-dark-pri group"
     >
       {/* Drag Handle */}
-      <div
-        className="flex justify-center items-center p-2 cursor-grab"
-        {...listeners}
-      >
-        <GripVertical
-          size={16}
-          className="transition-opacity opacity-0 group-hover:opacity-100 text-text-b-sec dark:text-text-w-sec"
-        />
-      </div>
+      <Tooltip content="Drag to reorder" delay={1500}>
+        <div
+          className="flex justify-center items-center p-2 cursor-grab"
+          {...listeners}
+        >
+          <GripVertical
+            size={16}
+            className="transition-opacity opacity-0 group-hover:opacity-100 text-text-b-sec dark:text-text-w-sec"
+          />
+        </div>
+      </Tooltip>
 
       {children}
     </div>
