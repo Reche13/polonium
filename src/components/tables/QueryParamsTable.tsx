@@ -77,7 +77,12 @@ const QueryParamsTable = () => {
               onChange={(e) => handleChange(param.id, "key", e.target.value)}
               onPointerDownCapture={(e) => e.stopPropagation()}
               spellCheck={false}
-              className="bg-transparent text-xs font-medium text-text-b-pri dark:text-text-w-pri outline-none w-full"
+              className={cn(
+                "bg-transparent text-xs font-medium outline-none w-full",
+                param.active
+                  ? "text-text-b-pri dark:text-text-w-pri"
+                  : "text-text-b-ter dark:text-text-w-ter"
+              )}
             />
           </div>
           <div className="p-2 flex flex-1">
@@ -88,7 +93,12 @@ const QueryParamsTable = () => {
               onChange={(e) => handleChange(param.id, "value", e.target.value)}
               onPointerDownCapture={(e) => e.stopPropagation()}
               spellCheck={false}
-              className="bg-transparent text-xs font-medium text-text-b-pri dark:text-text-w-pri outline-none w-full"
+              className={cn(
+                "bg-transparent text-xs font-medium outline-none w-full",
+                param.active
+                  ? "text-text-b-pri dark:text-text-w-pri"
+                  : "text-text-b-ter dark:text-text-w-ter"
+              )}
             />
           </div>
           <div className="p-2 flex flex-1">
@@ -101,7 +111,12 @@ const QueryParamsTable = () => {
               }
               onPointerDownCapture={(e) => e.stopPropagation()}
               spellCheck={false}
-              className="bg-transparent text-xs font-medium text-text-b-pri dark:text-text-w-pri outline-none w-full"
+              className={cn(
+                "bg-transparent text-xs font-medium outline-none w-full",
+                param.active
+                  ? "text-text-b-pri dark:text-text-w-pri"
+                  : "text-text-b-ter dark:text-text-w-ter"
+              )}
             />
           </div>
           <Tooltip content="Turn off">
