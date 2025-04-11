@@ -76,7 +76,7 @@ const ResponseBodyView = ({ value, type = "JSON" }: Props) => {
         "text-[12px] font-medium text-text-w-pri",
         robotoMono.className
       )}
-      theme={[bodyTheme, customTheme]}
+      theme={[bodyTheme, customTheme(theme)]}
       basicSetup={{
         foldGutter: false,
       }}

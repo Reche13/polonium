@@ -60,7 +60,15 @@ const Body = () => {
       </div>
       {/* BODY */}
       <div className="flex-1 overflow-y-auto">
-        <BodyEditor value={activeTab?.body ?? ""} onChange={handleBodyChange} />
+        {activeTab?.bodyType === "none" ? (
+          <div className="">No body</div>
+        ) : (
+          <BodyEditor
+            value={activeTab?.body ?? ""}
+            onChange={handleBodyChange}
+            type={activeTab?.bodyType}
+          />
+        )}
       </div>
     </div>
   );
