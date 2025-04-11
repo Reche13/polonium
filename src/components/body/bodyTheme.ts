@@ -11,7 +11,7 @@ export function createBodyTheme(
     settings: {
       background: theme === "dark" ? "#181818" : "#fefefe",
       foreground: theme === "dark" ? "#fcfcfc" : "#202020",
-      lineHighlight: theme === "dark" ? "#252525bb" : "#f1f1f1bb",
+      lineHighlight: theme === "dark" ? "#25252544" : "#f1f1f144",
       caret: "#6366F1",
       selection: "#6366F1",
       selectionMatch: "#6366F1",

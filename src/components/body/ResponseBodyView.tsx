@@ -12,8 +12,7 @@ import { html as cmHTML } from "@codemirror/lang-html";
 import { foldGutter } from "@codemirror/language";
 import { createBodyTheme, customTheme } from "./bodyTheme";
 
-import prettier from "prettier";
-import xmlFormatter from "xml-formatter";
+import { formatBodyContent } from "./formatBody";
 
 interface Props {
   value: string;
@@ -30,32 +29,6 @@ const myFoldGutter = foldGutter({
   closedText: "▸",
 });
 
-const formatContent = (value: string, type: ResponseDataType) => {
-  try {
-    if (type === "JSON") {
-      return JSON.stringify(JSON.parse(value), null, 2);
-    }
-    if (type === "HTML" || type === "XML") {
-      const isHtml = type === "HTML";
-      const content = isHtml
-        ? new DOMParser().parseFromString(value, "text/html").documentElement
-            .outerHTML
-        : value;
-
-      // Serialize back to string for formatting
-      const formattedHtml = xmlFormatter(content, {
-        indentation: "  ",
-        collapseContent: true,
-      });
-
-      return formattedHtml;
-    }
-  } catch (error) {
-    console.error("Formatting error:", error);
-  }
-  return value;
-};
-
 const ResponseBodyView = ({ value, type = "JSON" }: Props) => {
   const { theme } = useTheme();
 
@@ -63,7 +36,7 @@ const ResponseBodyView = ({ value, type = "JSON" }: Props) => {
 
   return (
     <ReactCodeMirror
-      value={formatContent(value, type)}
+      value={formatBodyContent(value, type)}
       extensions={[
         ...(type === "JSON" ? [json()] : []),
         ...(type === "XML" || type === "HTML" ? [cmHTML()] : []),
