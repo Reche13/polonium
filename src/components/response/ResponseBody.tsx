@@ -4,6 +4,7 @@ import { downloadFile } from "@/lib/donwloadFile";
 import { getMimeType } from "@/lib/mimes";
 import Tooltip from "../primitives/Tooltip";
 import { Copy, Download } from "lucide-react";
+import { toast } from "sonner";
 
 const ResponseBody = ({
   data,
@@ -20,7 +21,7 @@ const ResponseBody = ({
 
   const copyResponse = async () => {
     await navigator.clipboard.writeText(data);
-    alert("copied");
+    toast.success("Response body copied");
   };
 
   return (

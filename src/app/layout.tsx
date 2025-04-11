@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 
+import { Toaster } from "sonner";
+
 import { Inter } from "next/font/google";
 
 const inter = Inter({
@@ -23,6 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system">
+          <Toaster richColors position="top-center" />
           {children}
         </ThemeProvider>
       </body>

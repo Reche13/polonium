@@ -1,6 +1,7 @@
 import { Copy } from "lucide-react";
 import React from "react";
 import Tooltip from "../primitives/Tooltip";
+import { toast } from "sonner";
 
 interface Props {
   headers: Record<string, string>[];
@@ -8,12 +9,12 @@ interface Props {
 
 const copySingleHeader = async (value: string) => {
   await navigator.clipboard.writeText(value);
-  alert("copied");
+  toast.success("Value copied");
 };
 
 const copyAllHeaders = async (headers: Record<string, string>[]) => {
   await navigator.clipboard.writeText(JSON.stringify(headers));
-  alert("copied");
+  toast.success("Headers copied");
 };
 
 const ResponseHeaders = ({ headers }: Props) => {
