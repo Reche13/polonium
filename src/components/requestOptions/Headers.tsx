@@ -2,6 +2,7 @@ import React from "react";
 import HeadersTable from "../tables/HeadersTable";
 import { Plus, Trash2 } from "lucide-react";
 import { useRequestTabStore } from "@/stores/RequestTabStore";
+import Tooltip from "../primitives/Tooltip";
 
 const Headers = () => {
   const { activeTabId, tabs, editTab } = useRequestTabStore();
@@ -42,22 +43,26 @@ const Headers = () => {
           Headers List
         </span>
         <div className="flex">
-          <div
-            onClick={deleteAllRows}
-            role="button"
-            className="p-2 cursor-pointer"
-          >
-            <Trash2
-              size={16}
-              className="text-text-b-sec hover:text-text-b-pri dark:text-text-w-sec dark:hover:text-text-w-pri"
-            />
-          </div>
-          <div onClick={addRow} role="button" className="p-2 cursor-pointer">
-            <Plus
-              size={16}
-              className="text-text-b-sec hover:text-text-b-pri dark:text-text-w-sec dark:hover:text-text-w-pri"
-            />
-          </div>
+          <Tooltip content="Clear all" delay={500}>
+            <div
+              onClick={deleteAllRows}
+              role="button"
+              className="p-2 cursor-pointer"
+            >
+              <Trash2
+                size={16}
+                className="text-text-b-sec hover:text-text-b-pri dark:text-text-w-sec dark:hover:text-text-w-pri"
+              />
+            </div>
+          </Tooltip>
+          <Tooltip content="Add new" delay={500}>
+            <div onClick={addRow} role="button" className="p-2 cursor-pointer">
+              <Plus
+                size={16}
+                className="text-text-b-sec hover:text-text-b-pri dark:text-text-w-sec dark:hover:text-text-w-pri"
+              />
+            </div>
+          </Tooltip>
         </div>
       </div>
       <div className="flex-1 min-h-0 overflow-y-auto">
