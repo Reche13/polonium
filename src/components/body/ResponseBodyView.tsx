@@ -36,11 +36,14 @@ const formatContent = (value: string, type: ResponseDataType) => {
       return JSON.stringify(JSON.parse(value), null, 2);
     }
     if (type === "HTML" || type === "XML") {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(value, "text/html");
+      const isHtml = type === "HTML";
+      const content = isHtml
+        ? new DOMParser().parseFromString(value, "text/html").documentElement
+            .outerHTML
+        : value;
 
       // Serialize back to string for formatting
-      const formattedHtml = xmlFormatter(doc.documentElement.outerHTML, {
+      const formattedHtml = xmlFormatter(content, {
         indentation: "  ",
         collapseContent: true,
       });
