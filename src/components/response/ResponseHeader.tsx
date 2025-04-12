@@ -1,3 +1,4 @@
+import { formatBytes } from "@/lib/byteSize";
 import { cn } from "@/lib/cn";
 import React from "react";
 
@@ -41,7 +42,7 @@ const ResponseHeader = ({ status, statusText, timeTaken, size }: Props) => {
           Size
         </span>
         <span className={cn("text-xs font-semibold", getStatusColor(status))}>
-          {size} B
+          {formatBytes(size)}
         </span>
       </div>
     </div>
