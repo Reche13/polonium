@@ -5,6 +5,7 @@ import Spinner from "../primitives/loaders/Spinner";
 import ResponseNavigator from "./ResponseNavigator";
 import ResponseBody from "./ResponseBody";
 import ResponseHeaders from "./ResponseHeaders";
+import ResponseCookies from "./ResponseCookies";
 
 const Response = () => {
   const { activeTabId, tabs, editTab } = useRequestTabStore();
@@ -30,7 +31,7 @@ const Response = () => {
             selectedNav={activeRequest.SelectedResponseNav}
             changeNav={changeResponseNav}
           />
-          {activeRequest.SelectedResponseNav === "PRINT" && (
+          {activeRequest.SelectedResponseNav === "PRETTY" && (
             <ResponseBody
               type={activeRequest.responseDataType ?? "TEXT"}
               data={activeRequest.responseData ?? ""}
@@ -41,6 +42,9 @@ const Response = () => {
           )}
           {activeRequest.SelectedResponseNav === "HEADERS" && (
             <ResponseHeaders headers={activeRequest.responseHeaders ?? []} />
+          )}
+          {activeRequest.SelectedResponseNav === "COOKIES" && (
+            <ResponseCookies cookies={activeRequest.responseCookies ?? []} />
           )}
         </>
       )}

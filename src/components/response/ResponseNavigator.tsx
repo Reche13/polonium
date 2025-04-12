@@ -7,9 +7,10 @@ interface Props {
 }
 
 const ResponseNavList: { value: ResponseNav; label: string }[] = [
-  { value: "PRINT", label: "Print" },
+  { value: "PRETTY", label: "Pretty" },
   { value: "RAW", label: "Raw" },
   { value: "HEADERS", label: "Headers" },
+  { value: "COOKIES", label: "Cookies" },
 ];
 
 const ResponseNavigator = ({ selectedNav, changeNav }: Props) => {

@@ -1,3 +1,4 @@
+import { parseCookie } from "@/lib/cookies";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -18,6 +19,11 @@ export async function POST(req: NextRequest) {
       key,
       value,
     }));
+
+    const cookies = resHeaders
+      .filter((h) => h.key.toLowerCase() === "set-cookie")
+      .map((h) => parseCookie(h.value));
+
     const status = response.status;
     const statusText = response.statusText;
 
@@ -27,6 +33,7 @@ export async function POST(req: NextRequest) {
       data: resData,
       dataType: resType,
       headers: resHeaders,
+      cookies,
       status,
       statusText,
       size: resBlob.size,

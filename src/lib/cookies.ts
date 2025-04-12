@@ -1,7 +1,11 @@
-type ParsedCookie = {
+export type ParsedCookie = {
   name: string;
   value: string;
-  [key: string]: string | boolean | undefined;
+  domain?: string;
+  path?: string;
+  expires?: string;
+  httpOnly: boolean;
+  secure: boolean;
 };
 
 export const parseCookie = (str: string): ParsedCookie => {
@@ -11,14 +15,22 @@ export const parseCookie = (str: string): ParsedCookie => {
   const cookie: ParsedCookie = {
     name: decodeURIComponent(nameValue[0]),
     value: decodeURIComponent(nameValue[1] ?? ""),
+    domain: undefined,
+    path: undefined,
+    expires: undefined,
+    httpOnly: false,
+    secure: false,
   };
 
-  parts.forEach(([key, val]) => {
-    if (val === undefined) {
-      cookie[key] = true;
-    } else {
-      cookie[key] = decodeURIComponent(val);
-    }
+  parts.forEach(([keyRaw, valRaw]) => {
+    const key = keyRaw.toLowerCase();
+    const val = valRaw ? decodeURIComponent(valRaw) : undefined;
+
+    if (key === "domain") cookie.domain = val;
+    else if (key === "path") cookie.path = val;
+    else if (key === "expires") cookie.expires = val;
+    else if (key === "httponly") cookie.httpOnly = true;
+    else if (key === "secure") cookie.secure = true;
   });
 
   return cookie;

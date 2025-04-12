@@ -23,6 +23,7 @@ interface RequestTab {
   responseData?: string;
   responseDataType?: ResponseDataType;
   responseHeaders?: Record<string, string>[];
+  responseCookies?: Record<string, string>[];
   responseTime?: number;
   responseStatus?: number;
   responseStatusText?: string;
@@ -68,7 +69,7 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
       ],
       bodyType: "none",
       requestState: "NOT_STARTED",
-      SelectedResponseNav: "PRINT",
+      SelectedResponseNav: "PRETTY",
     },
   ],
   activeTabId: "default-tab",

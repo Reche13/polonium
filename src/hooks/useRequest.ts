@@ -79,6 +79,7 @@ export default function useRequest(id: string) {
         responseData: dataFromRes.data,
         responseDataType: dataFromRes.dataType,
         responseHeaders: dataFromRes.headers,
+        responseCookies: dataFromRes.cookies,
         responseSize: dataFromRes.size,
         responseStatus: dataFromRes.status,
         responseStatusText: dataFromRes.statusText,

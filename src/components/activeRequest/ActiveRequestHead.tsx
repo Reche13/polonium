@@ -14,7 +14,7 @@ const ActiveRequestHead = () => {
       selectedOptionNav: "PARAMS",
       bodyType: "none",
       requestState: "NOT_STARTED",
-      SelectedResponseNav: "PRINT",
+      SelectedResponseNav: "PRETTY",
     });
   };
 

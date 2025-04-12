@@ -12,6 +12,6 @@ type OptionsNav = "PARAMS" | "BODY" | "HEADERS" | "AUTH";
 
 type BodyType = "none" | "application/json" | "application/xml" | "text/plain";
 
-type ResponseNav = "PRINT" | "RAW" | "HEADERS";
+type ResponseNav = "PRETTY" | "RAW" | "HEADERS" | "COOKIES";
 
 type ResponseDataType = "TEXT" | "JSON" | "XML" | "HTML" | "FORM" | "BINARY";
