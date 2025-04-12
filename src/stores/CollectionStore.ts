@@ -92,7 +92,7 @@ type SavedRequest = Omit<
   | "responseSize"
 >;
 
-type CollectionNode =
+export type CollectionNode =
   | {
       id: string;
       type: "folder";
