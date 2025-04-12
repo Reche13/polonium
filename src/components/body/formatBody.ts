@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import xmlFormatter from "xml-formatter";
 
 export const formatBodyContent = (
@@ -26,6 +27,9 @@ export const formatBodyContent = (
     return value;
   } catch (error) {
     console.error("Formatting error:", error);
+    toast.error(
+      "Could not prettify and invalid body, solve syxtax errors and try again"
+    );
     return value;
   }
 };
