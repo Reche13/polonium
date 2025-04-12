@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="w-full h-screen flex flex-col">
       <Header />
-      <div className="flex w-full h-full">
+      <div className="flex flex-col-reverse md:flex-row w-full h-full">
         <Sidebar />
         {children}
       </div>
