@@ -11,12 +11,21 @@ import { Input } from "../primitives/Input";
 import { methodColors, methods } from "@/constants/request";
 import { useRequestTabStore } from "@/stores/RequestTabStore";
 import useRequest from "@/hooks/useRequest";
+import { toast } from "sonner";
 
 const RequestURLBar = () => {
   const { activeTabId, tabs, editTab } = useRequestTabStore();
   const activeRequest = tabs.find((req) => req.id === activeTabId);
 
   const { generateRequest } = useRequest(activeTabId);
+
+  const handleSend = () => {
+    if (!activeRequest?.url.trim()) {
+      toast.error("URL cannot be empty.");
+      return;
+    }
+    generateRequest();
+  };
 
   const handleMethodChange = (value: Method) => {
     editTab(activeTabId, {
@@ -65,7 +74,8 @@ const RequestURLBar = () => {
           className="text-xs text-text-b-pri border-none rounded-l-none bg-transparent h-full dark:text-text-w-pri px-4 py-2  outline-none w-full"
         />
       </div>
-      <Button onClick={generateRequest}>Send</Button>
+      <Button onClick={handleSend}>Send</Button>
+      <Button variant="seconodary">Save</Button>
     </div>
   );
 };
