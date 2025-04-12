@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type RowType = {
+export type RowType = {
   id: string;
   key: string;
   value: string;
@@ -8,7 +8,7 @@ type RowType = {
   active: boolean;
 };
 
-interface RequestTab {
+export type RequestTab = {
   id: string;
   title: string;
   method: Method;
@@ -28,7 +28,7 @@ interface RequestTab {
   responseStatus?: number;
   responseStatusText?: string;
   responseSize?: number;
-}
+};
 
 interface RequestTabStore {
   tabs: RequestTab[];

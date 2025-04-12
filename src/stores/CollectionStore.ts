@@ -1,0 +1,149 @@
+import { create } from "zustand";
+import { RequestTab, useRequestTabStore, RowType } from "./RequestTabStore";
+interface CollectionStore {
+  savedRequests: Record<string, SavedRequest>;
+  collections: CollectionNode[];
+
+  addFolder: (name: string, parentId: string | null) => void;
+  addRequest: (req: Omit<SavedRequest, "id">, parentId: string | null) => void;
+
+  updateRequest: (id: string, updates: Partial<SavedRequest>) => void;
+  deleteNode: (id: string) => void;
+
+  openRequestInTab: (requestId: string) => void;
+}
+
+export const useCollectionStore = create<CollectionStore>((set, get) => ({
+  savedRequests: {},
+  collections: [],
+
+  addFolder: (name, parentId) => {
+    const folder: CollectionNode = {
+      id: crypto.randomUUID(),
+      type: "folder",
+      name,
+      children: [],
+    };
+
+    set((state) => ({
+      collections: insertIntoTree(state.collections, folder, parentId),
+    }));
+  },
+
+  addRequest: (req, parentId) => {
+    const id = crypto.randomUUID();
+    const request: SavedRequest = { id, ...req };
+
+    const node: CollectionNode = {
+      id: crypto.randomUUID(),
+      type: "request",
+      requestId: id,
+      name: req.title,
+    };
+
+    set((state) => ({
+      savedRequests: {
+        ...state.savedRequests,
+        [id]: request,
+      },
+      collections: insertIntoTree(state.collections, node, parentId),
+    }));
+  },
+
+  updateRequest: (id, updates) =>
+    set((state) => ({
+      savedRequests: {
+        ...state.savedRequests,
+        [id]: {
+          ...state.savedRequests[id],
+          ...updates,
+        },
+      },
+    })),
+
+  deleteNode: (nodeId) =>
+    set((state) => {
+      const updatedTree = removeFromTree(state.collections, nodeId);
+      return { collections: updatedTree };
+    }),
+
+  openRequestInTab: (requestId) => {
+    const request = get().savedRequests[requestId];
+    if (!request) return;
+
+    useRequestTabStore.getState().addTab({
+      ...request,
+      requestState: "NOT_STARTED",
+      selectedOptionNav: "BODY",
+      SelectedResponseNav: "PRETTY",
+    });
+  },
+}));
+
+type SavedRequest = Omit<
+  RequestTab,
+  | "responseData"
+  | "responseDataType"
+  | "responseHeaders"
+  | "responseCookies"
+  | "responseTime"
+  | "responseStatus"
+  | "responseStatusText"
+  | "responseSize"
+>;
+
+type CollectionNode =
+  | {
+      id: string;
+      type: "folder";
+      name: string;
+      children: CollectionNode[];
+    }
+  | {
+      id: string;
+      type: "request";
+      requestId: string;
+      name: string;
+    };
+
+const insertIntoTree = (
+  tree: CollectionNode[],
+  node: CollectionNode,
+  parentId: string | null
+): CollectionNode[] => {
+  if (!parentId) return [...tree, node];
+
+  return tree.map((item) => {
+    if (item.type === "folder") {
+      if (item.id === parentId) {
+        return {
+          ...item,
+          children: [...item.children, node],
+        };
+      } else {
+        return {
+          ...item,
+          children: insertIntoTree(item.children, node, parentId),
+        };
+      }
+    }
+    return item;
+  });
+};
+
+const removeFromTree = (
+  tree: CollectionNode[],
+  targetId: string
+): CollectionNode[] => {
+  return tree
+    .filter((item) => item.id !== targetId)
+    .map((item) => {
+      if (item.type === "folder") {
+        return {
+          ...item,
+          children: removeFromTree(item.children, targetId),
+        };
+      }
+      return item;
+    });
+};
