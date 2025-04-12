@@ -152,7 +152,7 @@ const Body = () => {
       )}
 
       {/* BODY */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-bg-dark-ter/30 dark:scrollbar-thumb-bg-light-ter/30 scrollbar-track-bg-light-sec dark:scrollbar-track-bg-dark-sec">
         {activeTab?.bodyType === "none" ? (
           <div className="w-full h-full flex flex-col items-center">
             <span className="mt-8 text-sm font-medium text-text-b-sec dark:text-text-w-sec">
