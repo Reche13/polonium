@@ -27,7 +27,7 @@ const ResponseCookies = ({ cookies }: Props) => {
           </span>
         </div>
 
-        <div className="flex-1 overflow-y-auto divide-y divide-stroke-light-ter dark:divide-stroke-dark-ter">
+        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-bg-dark-ter/30 dark:scrollbar-thumb-bg-light-ter/30 scrollbar-track-bg-light-sec dark:scrollbar-track-bg-dark-sec divide-y divide-stroke-light-ter dark:divide-stroke-dark-ter">
           <div className="relative grid grid-cols-[2fr_2fr_1fr_1fr_1fr_1fr_1fr] divide-x divide-stroke-light-ter dark:divide-stroke-dark-ter text-text-b-sec dark:text-text-w-sec group">
             <div className="px-4 py-2 text-xs font-medium  truncate">Name</div>
             <div className="px-4 py-2 text-xs font-medium  truncate">Value</div>

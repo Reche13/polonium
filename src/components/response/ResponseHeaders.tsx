@@ -35,7 +35,7 @@ const ResponseHeaders = ({ headers }: Props) => {
           </Tooltip>
         </div>
 
-        <div className="flex-1 overflow-y-auto divide-y divide-stroke-light-ter dark:divide-stroke-dark-ter">
+        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-bg-dark-ter/30 dark:scrollbar-thumb-bg-light-ter/30 scrollbar-track-bg-light-sec dark:scrollbar-track-bg-dark-sec divide-y divide-stroke-light-ter dark:divide-stroke-dark-ter">
           {headers.map((header, index) => (
             <div
               className="relative grid grid-cols-2 divide-x divide-stroke-light-ter dark:divide-stroke-dark-ter text-text-b-sec hover:text-text-b-pri dark:text-text-w-sec dark:hover:text-text-w-pri transition group"
