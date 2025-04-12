@@ -17,8 +17,9 @@ const ActiveRequestHead = () => {
       SelectedResponseNav: "PRINT",
     });
   };
+
   return (
-    <div className="w-full flex items-center gap-3">
+    <div className="w-full flex items-center gap-3 pr-3 overflow-x-auto scrollbar-thin scrollbar-thumb-bg-dark-ter/30 dark:scrollbar-thumb-bg-light-ter/30 scrollbar-track-bg-light-sec dark:scrollbar-track-bg-dark-sec">
       <div className="flex items-center">
         {tabs.map((tab) => (
           <ActiveRequestTab

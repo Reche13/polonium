@@ -12,7 +12,7 @@ import Response from "@/components/response/Response";
 
 export default function Home() {
   return (
-    <div className="w-full flex-1 bg-bg-light-pri dark:bg-bg-dark-pri flex flex-col">
+    <div className="min-w-0 flex-1 bg-bg-light-pri dark:bg-bg-dark-pri flex flex-col">
       <ActiveRequestHead />
       <div className="w-full flex-1">
         <div className="w-full h-full flex flex-col">
