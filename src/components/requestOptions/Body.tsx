@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useRequestTabStore } from "@/stores/RequestTabStore";
 import {
   Select,
@@ -16,6 +16,8 @@ import { formatBodyContent } from "../body/formatBody";
 const Body = () => {
   const { activeTabId, tabs, editTab } = useRequestTabStore();
   const activeTab = tabs.find((req) => req.id === activeTabId);
+
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
 
   const handleBodyTypeChange = (value: BodyType) => {
     editTab(activeTabId, {
@@ -39,6 +41,24 @@ const Body = () => {
     editTab(activeTabId, {
       body: formatBodyContent(activeTab?.body ?? "", activeTab?.bodyType),
     });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      editTab(activeTabId, {
+        body: text,
+      });
+    };
+    reader.readAsText(file);
+  };
+
+  const handleImport = () => {
+    inputFileRef.current?.click();
   };
 
   return (
@@ -108,12 +128,24 @@ const Body = () => {
             </Tooltip>
 
             <Tooltip content="Import file" delay={500}>
-              <div role="button" className="p-2 cursor-pointer">
-                <FilePlus
-                  size={16}
-                  className="text-text-b-sec hover:text-text-b-pri dark:text-text-w-sec dark:hover:text-text-w-pri"
+              <>
+                <div
+                  role="button"
+                  onClick={handleImport}
+                  className="p-2 cursor-pointer"
+                >
+                  <FilePlus
+                    size={16}
+                    className="text-text-b-sec hover:text-text-b-pri dark:text-text-w-sec dark:hover:text-text-w-pri"
+                  />
+                </div>
+                <input
+                  type="file"
+                  ref={inputFileRef}
+                  onChange={handleFileChange}
+                  className="hidden"
                 />
-              </div>
+              </>
             </Tooltip>
           </div>
         </div>
