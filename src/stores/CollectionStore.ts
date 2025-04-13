@@ -1,15 +1,14 @@
 import { create } from "zustand";
-import { RequestTab, useRequestTabStore, RowType } from "./RequestTabStore";
+import { RequestTab, useRequestTabStore } from "./RequestTabStore";
+
 interface CollectionStore {
   savedRequests: Record<string, SavedRequest>;
   collections: CollectionNode[];
 
   addFolder: (name: string, parentId: string | null) => void;
   addRequest: (req: Omit<SavedRequest, "id">, parentId: string | null) => void;
-
   updateRequest: (id: string, updates: Partial<SavedRequest>) => void;
   deleteNode: (id: string) => void;
-
   openRequestInTab: (requestId: string) => void;
 }
 
@@ -32,34 +31,43 @@ export const useCollectionStore = create<CollectionStore>((set, get) => ({
 
   addRequest: (req, parentId) => {
     const id = crypto.randomUUID();
-    const request: SavedRequest = { id, ...req };
-
     const node: CollectionNode = {
-      id: crypto.randomUUID(),
+      id: id,
       type: "request",
       requestId: id,
+      method: req.method,
       name: req.title,
     };
 
     set((state) => ({
       savedRequests: {
         ...state.savedRequests,
-        [id]: request,
+        [id]: { ...req, id },
       },
       collections: insertIntoTree(state.collections, node, parentId),
     }));
   },
 
-  updateRequest: (id, updates) =>
-    set((state) => ({
-      savedRequests: {
-        ...state.savedRequests,
-        [id]: {
-          ...state.savedRequests[id],
-          ...updates,
+  updateRequest: (id, updates) => {
+    set((state) => {
+      const updatedSavedRequest = {
+        ...state.savedRequests[id],
+        ...updates,
+      };
+
+      const newCollections = updates.title
+        ? updateNodeInTree(state.collections, id, updates.title)
+        : state.collections;
+
+      return {
+        savedRequests: {
+          ...state.savedRequests,
+          [id]: updatedSavedRequest,
         },
-      },
-    })),
+        collections: newCollections,
+      };
+    });
+  },
 
   deleteNode: (nodeId) =>
     set((state) => {
@@ -103,6 +111,7 @@ export type CollectionNode =
       id: string;
       type: "request";
       requestId: string;
+      method: Method;
       name: string;
     };
 
@@ -130,6 +139,27 @@ const insertIntoTree = (
     return item;
   });
 };
+
+function updateNodeInTree(
+  tree: CollectionNode[],
+  requestId: string,
+  updatedName: string
+): CollectionNode[] {
+  return tree.map((node) => {
+    if (node.type === "folder") {
+      return {
+        ...node,
+        children: updateNodeInTree(node.children, requestId, updatedName),
+      };
+    } else if (node.type === "request" && node.requestId === requestId) {
+      return {
+        ...node,
+        name: updatedName,
+      };
+    }
+    return node;
+  });
+}
 
 const removeFromTree = (
   tree: CollectionNode[],

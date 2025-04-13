@@ -6,6 +6,8 @@ import { useState } from "react";
 import { methodColors } from "@/constants/request";
 import { Input } from "../primitives/Input";
 import Tooltip from "../primitives/Tooltip";
+import { useCollectionStore } from "@/stores/CollectionStore";
+import { toast } from "sonner";
 
 interface Props {
   id: string;
@@ -22,6 +24,7 @@ const ActiveRequestTab = ({
   const [newTitle, setNewtitle] = useState(title);
   const { activeTabId, removeTab, setActiveTab, tabs, editTab } =
     useRequestTabStore();
+  const { updateRequest } = useCollectionStore();
 
   const active = id === activeTabId;
 
@@ -34,9 +37,12 @@ const ActiveRequestTab = ({
   const onlyOneLeft = tabs.length === 1;
 
   const handleTitleChange = () => {
-    if (!newTitle.trim()) return;
-    // TODO: implement toast here
+    if (!newTitle.trim()) {
+      toast.error("Title cannot be empty");
+      return;
+    }
     editTab(id, { title: newTitle });
+    updateRequest(id, { title: newTitle });
     setModalOpen(false);
   };
 

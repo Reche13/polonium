@@ -33,7 +33,7 @@ export type RequestTab = {
 interface RequestTabStore {
   tabs: RequestTab[];
   activeTabId: string;
-  addTab: (tab: Omit<RequestTab, "id">) => void;
+  addTab: (tab: RequestTab) => void;
   removeTab: (id: string) => void;
   setActiveTab: (id: string) => void;
   editTab: (id: string, updates: Partial<Omit<RequestTab, "id">>) => void;
@@ -74,16 +74,21 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
   ],
   activeTabId: "default-tab",
 
-  addTab: (tab) =>
+  addTab: (tab) => {
     set((state) => {
-      const id = crypto.randomUUID();
+      const existingTab = state.tabs.find((t) => t.id === tab.id);
+      if (existingTab) {
+        return {
+          activeTabId: tab.id,
+        };
+      }
       return {
         tabs: [
           ...state.tabs,
           {
-            id,
             ...tab,
             headers: [
+              ...(tab.headers ?? []),
               {
                 id: crypto.randomUUID(),
                 key: "",
@@ -93,6 +98,7 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
               },
             ],
             queryParams: [
+              ...(tab.queryParams ?? []),
               {
                 id: crypto.randomUUID(),
                 key: "",
@@ -103,9 +109,10 @@ export const useRequestTabStore = create<RequestTabStore>((set) => ({
             ],
           },
         ],
-        activeTabId: id,
+        activeTabId: tab.id,
       };
-    }),
+    });
+  },
 
   editTab: (id, updates) =>
     set((state) => ({

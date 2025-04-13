@@ -7,7 +7,9 @@ const ActiveRequestHead = () => {
   const { tabs, addTab } = useRequestTabStore();
 
   const createNewTab = () => {
+    const id = crypto.randomUUID();
     addTab({
+      id,
       method: "GET",
       title: "Untitled",
       url: "",

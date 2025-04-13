@@ -46,7 +46,7 @@ const Collection = () => {
 
       <div className="flex-1 flex flex-col gap-1 py-1">
         {collections.map((col) => (
-          <Folder col={col} key={col.id} />
+          <Folder col={col} key={col.type + col.id} />
         ))}
       </div>
 
