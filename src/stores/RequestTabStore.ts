@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type RowType = {
   id: string;
@@ -41,129 +42,136 @@ interface RequestTabStore {
   moveHeader: (tabId: string, fromIndex: number, toIndex: number) => void;
 }
 
-export const useRequestTabStore = create<RequestTabStore>((set) => ({
-  tabs: [
-    {
-      id: "default-tab",
-      title: "Untitled",
-      method: "GET",
-      url: "https://jsonplaceholder.typicode.com/todos/1",
-      selectedOptionNav: "PARAMS",
-      queryParams: [
+export const useRequestTabStore = create(
+  persist<RequestTabStore>(
+    (set) => ({
+      tabs: [
         {
-          id: crypto.randomUUID(),
-          key: "",
-          value: "",
-          description: "",
-          active: true,
+          id: "default-tab",
+          title: "Untitled",
+          method: "GET",
+          url: "https://jsonplaceholder.typicode.com/todos/1",
+          selectedOptionNav: "PARAMS",
+          queryParams: [
+            {
+              id: crypto.randomUUID(),
+              key: "",
+              value: "",
+              description: "",
+              active: true,
+            },
+          ],
+          headers: [
+            {
+              id: crypto.randomUUID(),
+              key: "",
+              value: "",
+              description: "",
+              active: true,
+            },
+          ],
+          bodyType: "none",
+          requestState: "NOT_STARTED",
+          SelectedResponseNav: "PRETTY",
         },
       ],
-      headers: [
-        {
-          id: crypto.randomUUID(),
-          key: "",
-          value: "",
-          description: "",
-          active: true,
-        },
-      ],
-      bodyType: "none",
-      requestState: "NOT_STARTED",
-      SelectedResponseNav: "PRETTY",
-    },
-  ],
-  activeTabId: "default-tab",
+      activeTabId: "default-tab",
 
-  addTab: (tab) => {
-    set((state) => {
-      const existingTab = state.tabs.find((t) => t.id === tab.id);
-      if (existingTab) {
-        return {
-          activeTabId: tab.id,
-        };
-      }
-      return {
-        tabs: [
-          ...state.tabs,
-          {
-            ...tab,
-            headers: [
-              ...(tab.headers ?? []),
+      addTab: (tab) => {
+        set((state) => {
+          const existingTab = state.tabs.find((t) => t.id === tab.id);
+          if (existingTab) {
+            return {
+              activeTabId: tab.id,
+            };
+          }
+          return {
+            tabs: [
+              ...state.tabs,
               {
-                id: crypto.randomUUID(),
-                key: "",
-                value: "",
-                description: "",
-                active: true,
+                ...tab,
+                headers: [
+                  ...(tab.headers ?? []),
+                  {
+                    id: crypto.randomUUID(),
+                    key: "",
+                    value: "",
+                    description: "",
+                    active: true,
+                  },
+                ],
+                queryParams: [
+                  ...(tab.queryParams ?? []),
+                  {
+                    id: crypto.randomUUID(),
+                    key: "",
+                    value: "",
+                    description: "",
+                    active: true,
+                  },
+                ],
               },
             ],
-            queryParams: [
-              ...(tab.queryParams ?? []),
-              {
-                id: crypto.randomUUID(),
-                key: "",
-                value: "",
-                description: "",
-                active: true,
-              },
-            ],
-          },
-        ],
-        activeTabId: tab.id,
-      };
-    });
-  },
+            activeTabId: tab.id,
+          };
+        });
+      },
 
-  editTab: (id, updates) =>
-    set((state) => ({
-      tabs: state.tabs.map((tab) =>
-        tab.id === id ? { ...tab, ...updates } : tab
-      ),
-    })),
+      editTab: (id, updates) =>
+        set((state) => ({
+          tabs: state.tabs.map((tab) =>
+            tab.id === id ? { ...tab, ...updates } : tab
+          ),
+        })),
 
-  removeTab: (id) =>
-    set((state) => {
-      if (state.tabs.length === 1) return state;
-      const curIdx = state.tabs.findIndex((t) => t.id === id);
+      removeTab: (id) =>
+        set((state) => {
+          if (state.tabs.length === 1) return state;
+          const curIdx = state.tabs.findIndex((t) => t.id === id);
 
-      const newTabs = state.tabs.filter((t) => t.id !== id);
+          const newTabs = state.tabs.filter((t) => t.id !== id);
 
-      let activeId = state.activeTabId;
-      if (state.activeTabId === id) {
-        activeId = curIdx > 0 ? state.tabs[curIdx - 1].id : newTabs[0]?.id;
-      }
+          let activeId = state.activeTabId;
+          if (state.activeTabId === id) {
+            activeId = curIdx > 0 ? state.tabs[curIdx - 1].id : newTabs[0]?.id;
+          }
 
-      return {
-        tabs: newTabs,
-        activeTabId: activeId,
-      };
+          return {
+            tabs: newTabs,
+            activeTabId: activeId,
+          };
+        }),
+
+      setActiveTab: (id) => set(() => ({ activeTabId: id })),
+
+      moveQueryParam: (tabId, fromIndex, toIndex) =>
+        set((state) => ({
+          tabs: state.tabs.map((tab) => {
+            if (tab.id !== tabId) return tab;
+
+            const newRows = [...tab.queryParams!!];
+            const [movedItem] = newRows.splice(fromIndex, 1);
+            newRows.splice(toIndex, 0, movedItem);
+
+            return { ...tab, queryParams: newRows };
+          }),
+        })),
+
+      moveHeader: (tabId, fromIndex, toIndex) =>
+        set((state) => ({
+          tabs: state.tabs.map((tab) => {
+            if (tab.id !== tabId) return tab;
+
+            const newRows = [...tab.headers!!];
+            const [movedItem] = newRows.splice(fromIndex, 1);
+            newRows.splice(toIndex, 0, movedItem);
+
+            return { ...tab, headers: newRows };
+          }),
+        })),
     }),
-
-  setActiveTab: (id) => set(() => ({ activeTabId: id })),
-
-  moveQueryParam: (tabId, fromIndex, toIndex) =>
-    set((state) => ({
-      tabs: state.tabs.map((tab) => {
-        if (tab.id !== tabId) return tab;
-
-        const newRows = [...tab.queryParams!!];
-        const [movedItem] = newRows.splice(fromIndex, 1);
-        newRows.splice(toIndex, 0, movedItem);
-
-        return { ...tab, queryParams: newRows };
-      }),
-    })),
-
-  moveHeader: (tabId, fromIndex, toIndex) =>
-    set((state) => ({
-      tabs: state.tabs.map((tab) => {
-        if (tab.id !== tabId) return tab;
-
-        const newRows = [...tab.headers!!];
-        const [movedItem] = newRows.splice(fromIndex, 1);
-        newRows.splice(toIndex, 0, movedItem);
-
-        return { ...tab, headers: newRows };
-      }),
-    })),
-}));
+    {
+      name: "request-tab-storage",
+    }
+  )
+);

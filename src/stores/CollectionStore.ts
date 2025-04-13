@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { RequestTab, useRequestTabStore } from "./RequestTabStore";
 
 interface CollectionStore {
@@ -15,159 +16,169 @@ interface CollectionStore {
   saveRequestFromTab: (tabId: string, parentFolderId?: string | null) => void;
 }
 
-export const useCollectionStore = create<CollectionStore>((set, get) => ({
-  savedRequests: {},
-  collections: [],
+export const useCollectionStore = create(
+  persist<CollectionStore>(
+    (set, get) => ({
+      savedRequests: {},
+      collections: [],
 
-  addFolder: (name, parentId) => {
-    const folder: CollectionNode = {
-      id: crypto.randomUUID(),
-      type: "folder",
-      name,
-      children: [],
-    };
+      addFolder: (name, parentId) => {
+        const folder: CollectionNode = {
+          id: crypto.randomUUID(),
+          type: "folder",
+          name,
+          children: [],
+        };
 
-    set((state) => ({
-      collections: insertIntoTree(state.collections, folder, parentId),
-    }));
-  },
-
-  updateFolderName: (folderId: string, newName: string) => {
-    set((state) => ({
-      collections: updateNodeInTree(state.collections, folderId, newName),
-    }));
-  },
-
-  addRequest: (req, parentId) => {
-    const id = crypto.randomUUID();
-    const node: CollectionNode = {
-      id: id,
-      type: "request",
-      requestId: id,
-      method: req.method,
-      name: req.title,
-    };
-
-    set((state) => ({
-      savedRequests: {
-        ...state.savedRequests,
-        [id]: { ...req, id },
+        set((state) => ({
+          collections: insertIntoTree(state.collections, folder, parentId),
+        }));
       },
-      collections: insertIntoTree(state.collections, node, parentId),
-    }));
-  },
 
-  duplicateRequest: (requestId: string) => {
-    const { savedRequests, collections } = get();
-    const original = savedRequests[requestId];
-    if (!original) return;
-
-    const newId = crypto.randomUUID();
-
-    const duplicate: SavedRequest = {
-      ...original,
-      id: newId,
-      title: `${original.title} Copy`,
-    };
-
-    const parentId = findParentId(collections, requestId);
-
-    const newNode: CollectionNode = {
-      id: newId,
-      type: "request",
-      requestId: newId,
-      method: original.method,
-      name: duplicate.title,
-    };
-
-    set((state) => ({
-      savedRequests: {
-        ...state.savedRequests,
-        [newId]: duplicate,
+      updateFolderName: (folderId: string, newName: string) => {
+        set((state) => ({
+          collections: updateNodeInTree(state.collections, folderId, newName),
+        }));
       },
-      collections: insertIntoTree(state.collections, newNode, parentId),
-    }));
-  },
 
-  updateRequest: (id, updates) => {
-    console.log(updates);
-    set((state) => {
-      const updatedSavedRequest = {
-        ...state.savedRequests[id],
-        ...updates,
-      };
-      const newCollections =
-        updates.title || updates.method
-          ? updateNodeInTree(
-              state.collections,
-              id,
-              updates.title,
-              updates.method
-            )
-          : state.collections;
+      addRequest: (req, parentId) => {
+        const id = crypto.randomUUID();
+        const node: CollectionNode = {
+          id: id,
+          type: "request",
+          requestId: id,
+          method: req.method,
+          name: req.title,
+        };
 
-      return {
-        savedRequests: {
-          ...state.savedRequests,
-          [id]: updatedSavedRequest,
-        },
-        collections: newCollections,
-      };
-    });
-  },
+        set((state) => ({
+          savedRequests: {
+            ...state.savedRequests,
+            [id]: { ...req, id },
+          },
+          collections: insertIntoTree(state.collections, node, parentId),
+        }));
+      },
 
-  deleteNode: (nodeId) =>
-    set((state) => {
-      const updatedTree = removeFromTree(state.collections, nodeId);
-      return { collections: updatedTree };
-    }),
+      duplicateRequest: (requestId: string) => {
+        const { savedRequests, collections } = get();
+        const original = savedRequests[requestId];
+        if (!original) return;
 
-  openRequestInTab: (requestId) => {
-    const request = get().savedRequests[requestId];
-    if (!request) return;
+        const newId = crypto.randomUUID();
 
-    useRequestTabStore.getState().addTab({
-      ...request,
-      requestState: "NOT_STARTED",
-      selectedOptionNav: "PARAMS",
-      SelectedResponseNav: "PRETTY",
-    });
-  },
+        const duplicate: SavedRequest = {
+          ...original,
+          id: newId,
+          title: `${original.title} Copy`,
+        };
 
-  saveRequestFromTab: (tabId: string, parentFolderId?: string | null) => {
-    const tab = useRequestTabStore.getState().tabs.find((t) => t.id === tabId);
-    if (!tab) return;
+        const parentId = findParentId(collections, requestId);
 
-    const parentId = parentFolderId ?? findParentId(get().collections, tabId);
+        const newNode: CollectionNode = {
+          id: newId,
+          type: "request",
+          requestId: newId,
+          method: original.method,
+          name: duplicate.title,
+        };
 
-    set((state) => {
-      const isExisting = !!state.savedRequests[tab.id];
-      const savedRequests = {
-        ...state.savedRequests,
-        [tab.id]: {
-          ...state.savedRequests[tab.id],
-          ...tab,
-        },
-      };
+        set((state) => ({
+          savedRequests: {
+            ...state.savedRequests,
+            [newId]: duplicate,
+          },
+          collections: insertIntoTree(state.collections, newNode, parentId),
+        }));
+      },
 
-      const collections = isExisting
-        ? updateNodeInTree(state.collections, tab.id, tab.title, tab.method)
-        : insertIntoTree(
-            state.collections,
-            {
-              id: tab.id,
-              type: "request",
-              requestId: tab.id,
-              method: tab.method,
-              name: tab.title || "Untitled",
+      updateRequest: (id, updates) => {
+        console.log(updates);
+        set((state) => {
+          const updatedSavedRequest = {
+            ...state.savedRequests[id],
+            ...updates,
+          };
+          const newCollections =
+            updates.title || updates.method
+              ? updateNodeInTree(
+                  state.collections,
+                  id,
+                  updates.title,
+                  updates.method
+                )
+              : state.collections;
+
+          return {
+            savedRequests: {
+              ...state.savedRequests,
+              [id]: updatedSavedRequest,
             },
-            parentId
-          );
+            collections: newCollections,
+          };
+        });
+      },
 
-      return { savedRequests, collections };
-    });
-  },
-}));
+      deleteNode: (nodeId) =>
+        set((state) => {
+          const updatedTree = removeFromTree(state.collections, nodeId);
+          return { collections: updatedTree };
+        }),
+
+      openRequestInTab: (requestId) => {
+        const request = get().savedRequests[requestId];
+        if (!request) return;
+
+        useRequestTabStore.getState().addTab({
+          ...request,
+          requestState: "NOT_STARTED",
+          selectedOptionNav: "PARAMS",
+          SelectedResponseNav: "PRETTY",
+        });
+      },
+
+      saveRequestFromTab: (tabId: string, parentFolderId?: string | null) => {
+        const tab = useRequestTabStore
+          .getState()
+          .tabs.find((t) => t.id === tabId);
+        if (!tab) return;
+
+        const parentId =
+          parentFolderId ?? findParentId(get().collections, tabId);
+
+        set((state) => {
+          const isExisting = !!state.savedRequests[tab.id];
+          const savedRequests = {
+            ...state.savedRequests,
+            [tab.id]: {
+              ...state.savedRequests[tab.id],
+              ...tab,
+            },
+          };
+
+          const collections = isExisting
+            ? updateNodeInTree(state.collections, tab.id, tab.title, tab.method)
+            : insertIntoTree(
+                state.collections,
+                {
+                  id: tab.id,
+                  type: "request",
+                  requestId: tab.id,
+                  method: tab.method,
+                  name: tab.title || "Untitled",
+                },
+                parentId
+              );
+
+          return { savedRequests, collections };
+        });
+      },
+    }),
+    {
+      name: "collection-storage",
+    }
+  )
+);
 
 type SavedRequest = Omit<
   RequestTab,
