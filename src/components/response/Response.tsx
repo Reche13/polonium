@@ -50,13 +50,23 @@ const Response = () => {
       )}
 
       {activeRequest?.requestState === "NOT_STARTED" && (
-        <div className="w-full h-full flex items-center justify-center py-10">
-          not Started
+        <div className="w-full h-full flex flex-col items-center py-10">
+          <span className="mt-8 text-sm font-medium text-text-b-sec dark:text-text-w-sec">
+            No Request Made Yet
+          </span>
+          <p className="text-xs font-normal text-text-b-sec dark:text-text-w-sec">
+            Send a request to see the response here.
+          </p>
         </div>
       )}
       {activeRequest?.requestState === "FAILED" && (
-        <div className="w-full h-full flex items-center justify-center py-10">
-          Failed
+        <div className="w-full h-full flex flex-col items-center py-10">
+          <span className="mt-8 text-sm font-medium text-text-b-sec dark:text-text-w-sec">
+            Request Failed
+          </span>
+          <p className="text-xs font-normal text-text-b-sec dark:text-text-w-sec">
+            Check your network or the request URL.
+          </p>
         </div>
       )}
       {activeRequest?.requestState === "PENDING" && (
