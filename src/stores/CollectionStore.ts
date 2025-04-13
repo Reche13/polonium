@@ -6,7 +6,9 @@ interface CollectionStore {
   collections: CollectionNode[];
 
   addFolder: (name: string, parentId: string | null) => void;
+  updateFolderName: (folderId: string, newName: string) => void;
   addRequest: (req: Omit<SavedRequest, "id">, parentId: string | null) => void;
+  duplicateRequest: (requestId: string) => void;
   updateRequest: (id: string, updates: Partial<SavedRequest>) => void;
   deleteNode: (id: string) => void;
   openRequestInTab: (requestId: string) => void;
@@ -29,6 +31,12 @@ export const useCollectionStore = create<CollectionStore>((set, get) => ({
     }));
   },
 
+  updateFolderName: (folderId: string, newName: string) => {
+    set((state) => ({
+      collections: updateNodeInTree(state.collections, folderId, newName),
+    }));
+  },
+
   addRequest: (req, parentId) => {
     const id = crypto.randomUUID();
     const node: CollectionNode = {
@@ -45,6 +53,38 @@ export const useCollectionStore = create<CollectionStore>((set, get) => ({
         [id]: { ...req, id },
       },
       collections: insertIntoTree(state.collections, node, parentId),
+    }));
+  },
+
+  duplicateRequest: (requestId: string) => {
+    const { savedRequests, collections } = get();
+    const original = savedRequests[requestId];
+    if (!original) return;
+
+    const newId = crypto.randomUUID();
+
+    const duplicate: SavedRequest = {
+      ...original,
+      id: newId,
+      title: `${original.title} Copy`,
+    };
+
+    const parentId = findParentId(collections, requestId);
+
+    const newNode: CollectionNode = {
+      id: newId,
+      type: "request",
+      requestId: newId,
+      method: original.method,
+      name: duplicate.title,
+    };
+
+    set((state) => ({
+      savedRequests: {
+        ...state.savedRequests,
+        [newId]: duplicate,
+      },
+      collections: insertIntoTree(state.collections, newNode, parentId),
     }));
   },
 
@@ -82,7 +122,7 @@ export const useCollectionStore = create<CollectionStore>((set, get) => ({
     useRequestTabStore.getState().addTab({
       ...request,
       requestState: "NOT_STARTED",
-      selectedOptionNav: "BODY",
+      selectedOptionNav: "PARAMS",
       SelectedResponseNav: "PRETTY",
     });
   },
@@ -140,26 +180,29 @@ const insertIntoTree = (
   });
 };
 
-function updateNodeInTree(
+const updateNodeInTree = (
   tree: CollectionNode[],
-  requestId: string,
+  nodeId: string,
   updatedName: string
-): CollectionNode[] {
+): CollectionNode[] => {
   return tree.map((node) => {
-    if (node.type === "folder") {
-      return {
-        ...node,
-        children: updateNodeInTree(node.children, requestId, updatedName),
-      };
-    } else if (node.type === "request" && node.requestId === requestId) {
+    if (node.id === nodeId) {
       return {
         ...node,
         name: updatedName,
       };
     }
+
+    if (node.type === "folder") {
+      return {
+        ...node,
+        children: updateNodeInTree(node.children, nodeId, updatedName),
+      };
+    }
+
     return node;
   });
-}
+};
 
 const removeFromTree = (
   tree: CollectionNode[],
@@ -176,4 +219,20 @@ const removeFromTree = (
       }
       return item;
     });
+};
+
+const findParentId = (
+  tree: CollectionNode[],
+  targetId: string,
+  parentId: string | null = null
+): string | null => {
+  for (const node of tree) {
+    if (node.type === "request" && node.requestId === targetId) {
+      return parentId;
+    } else if (node.type === "folder") {
+      const result = findParentId(node.children, targetId, node.id);
+      if (result) return result;
+    }
+  }
+  return null;
 };

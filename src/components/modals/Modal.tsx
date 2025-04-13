@@ -12,6 +12,7 @@ interface ModalProps {
   primaryActionTitle?: string;
   secondaryAction?: () => void;
   secondaryActionTitle?: string;
+  primaryActionDestructive?: boolean;
 }
 
 const Modal = ({
@@ -23,6 +24,7 @@ const Modal = ({
   primaryActionTitle,
   secondaryAction,
   secondaryActionTitle,
+  primaryActionDestructive = false,
 }: ModalProps) => {
   useEffect(() => {
     if (!isOpen) return;
@@ -66,7 +68,12 @@ const Modal = ({
             </Button>
           )}
           {primaryAction && (
-            <Button onClick={primaryAction}>{primaryActionTitle}</Button>
+            <Button
+              variant={primaryActionDestructive ? "destructive" : "default"}
+              onClick={primaryAction}
+            >
+              {primaryActionTitle}
+            </Button>
           )}
         </div>
       </div>

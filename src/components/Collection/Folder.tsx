@@ -21,15 +21,29 @@ import {
   DropdownMenuTrigger,
 } from "../primitives/Dropdown";
 import { methodColors } from "@/constants/request";
+import { useRequestTabStore } from "@/stores/RequestTabStore";
 
 const Folder = ({ col }: { col: CollectionNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [folderModalOpen, setFolderModalOpen] = useState(false);
   const [requestModalOpen, setRequestModalOpen] = useState(false);
+  const [editNodeModalOpen, setEditNodeModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const [subFolderTitle, setSubFolderTitle] = useState("");
   const [requestTitle, setRequestTitle] = useState("");
+  const [editNodeTitle, setEditNodeTitle] = useState(col.name);
 
-  const { addFolder, addRequest, openRequestInTab } = useCollectionStore();
+  const {
+    addFolder,
+    addRequest,
+    openRequestInTab,
+    updateRequest,
+    duplicateRequest,
+    deleteNode,
+    updateFolderName,
+  } = useCollectionStore();
+  const { editTab } = useRequestTabStore();
 
   const handleCreateSubFolder = () => {
     if (!subFolderTitle.trim()) {
@@ -74,6 +88,36 @@ const Folder = ({ col }: { col: CollectionNode }) => {
     setRequestTitle("");
   };
 
+  const handleEditCancel = () => {
+    setEditNodeModalOpen(false);
+    setEditNodeTitle(col.name);
+  };
+
+  const handleEditRequest = () => {
+    if (!editNodeTitle.trim()) {
+      toast.error("Title cannot be empty");
+      return;
+    }
+
+    updateRequest(col.id, { title: editNodeTitle });
+    editTab(col.id, { title: editNodeTitle });
+    setEditNodeModalOpen(false);
+  };
+
+  const handleEditFolder = () => {
+    updateFolderName(col.id, editNodeTitle);
+    setEditNodeModalOpen(false);
+  };
+
+  const deleteReqOrFolder = () => {
+    deleteNode(col.id);
+    setDeleteModalOpen(false);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteModalOpen(false);
+  };
+
   if (col.type === "request")
     return (
       <div className="w-full relative">
@@ -105,10 +149,11 @@ const Folder = ({ col }: { col: CollectionNode }) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="bg-bg-light-pri dark:bg-bg-dark-pri border-stroke-light-sec dark:border-stroke-dark-sec"
+                className="bg-bg-light-pri dark:bg-bg-dark-pri border-stroke-light-ter dark:border-stroke-dark-ter"
               >
                 <DropdownMenuItem
                   role="button"
+                  onClick={() => setEditNodeModalOpen(true)}
                   className="flex items-center gap-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
                 >
                   <Edit size={16} />
@@ -116,6 +161,7 @@ const Folder = ({ col }: { col: CollectionNode }) => {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   role="button"
+                  onClick={() => duplicateRequest(col.id)}
                   className="flex items-center gap-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
                 >
                   <Copy size={16} />
@@ -123,6 +169,7 @@ const Folder = ({ col }: { col: CollectionNode }) => {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   role="button"
+                  onClick={() => setDeleteModalOpen(true)}
                   className="flex items-center gap-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
                 >
                   <Trash2 size={16} />
@@ -132,6 +179,22 @@ const Folder = ({ col }: { col: CollectionNode }) => {
             </DropdownMenu>
           </div>
         </div>
+
+        <EditModal
+          col={col}
+          EditFunction={handleEditRequest}
+          editNodeModalOpen={editNodeModalOpen}
+          editNodeTitle={editNodeTitle}
+          setEditNodeTitle={setEditNodeTitle}
+          handleCancel={handleEditCancel}
+        />
+
+        <DeleteModal
+          col={col}
+          deleteModalOpen={deleteModalOpen}
+          deleteReqOrFolder={deleteReqOrFolder}
+          handleCancelDelete={handleCancelDelete}
+        />
       </div>
     );
 
@@ -162,7 +225,7 @@ const Folder = ({ col }: { col: CollectionNode }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-bg-light-pri dark:bg-bg-dark-pri border-stroke-light-sec dark:border-stroke-dark-sec"
+              className="bg-bg-light-pri dark:bg-bg-dark-pri border-stroke-light-ter dark:border-stroke-dark-ter"
             >
               <DropdownMenuItem
                 role="button"
@@ -179,6 +242,22 @@ const Folder = ({ col }: { col: CollectionNode }) => {
               >
                 <FolderPlus size={16} />
                 <span className="text-xs font-medium">New Folder</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                role="button"
+                onClick={() => setEditNodeModalOpen(true)}
+                className="flex items-center gap-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
+              >
+                <Edit size={16} />
+                <span className="text-xs font-medium">Edit Folder</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                role="button"
+                onClick={() => setDeleteModalOpen(true)}
+                className="flex items-center gap-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
+              >
+                <Trash2 size={16} />
+                <span className="text-xs font-medium">Delete Folder</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -227,8 +306,94 @@ const Folder = ({ col }: { col: CollectionNode }) => {
           className="text-sm text-text-b-pri dark:text-text-w-pri px-4 py-2 bg-bg-light-sec dark:bg-bg-dark-sec rounded-md border border-stroke-light-ter focus:border-stroke-light-sec dark:border-stroke-dark-ter dark:focus:border-stroke-dark-sec outline-none w-full"
         />
       </Modal>
+
+      <EditModal
+        col={col}
+        EditFunction={handleEditFolder}
+        editNodeModalOpen={editNodeModalOpen}
+        editNodeTitle={editNodeTitle}
+        setEditNodeTitle={setEditNodeTitle}
+        handleCancel={handleEditCancel}
+      />
+
+      <DeleteModal
+        col={col}
+        deleteModalOpen={deleteModalOpen}
+        deleteReqOrFolder={deleteReqOrFolder}
+        handleCancelDelete={handleCancelDelete}
+      />
     </div>
   );
 };
 
 export default Folder;
+
+interface DeleteModalProps {
+  col: CollectionNode;
+  deleteModalOpen: boolean;
+  deleteReqOrFolder: () => void;
+  handleCancelDelete: () => void;
+}
+
+const DeleteModal = ({
+  col,
+  deleteModalOpen,
+  deleteReqOrFolder,
+  handleCancelDelete,
+}: DeleteModalProps) => {
+  return (
+    <Modal
+      title={`Delete ${col.type.charAt(0).toUpperCase() + col.type.slice(1)}`}
+      isOpen={deleteModalOpen}
+      onClose={handleCancelDelete}
+      primaryAction={deleteReqOrFolder}
+      primaryActionTitle="Delete"
+      secondaryAction={handleCancelDelete}
+      secondaryActionTitle="Cancel"
+      primaryActionDestructive
+    >
+      <p className="text-sm text-text-b-sec dark:text-text-w-sec text-center">
+        Are you sure you want to delete this {col.type}? <br />
+        This action is irreversible
+      </p>
+    </Modal>
+  );
+};
+
+interface EditModalProps {
+  col: CollectionNode;
+  editNodeModalOpen: boolean;
+  EditFunction: () => void;
+  handleCancel: () => void;
+  editNodeTitle: string;
+  setEditNodeTitle: (title: string) => void;
+}
+
+const EditModal = ({
+  col,
+  editNodeModalOpen,
+  EditFunction,
+  handleCancel,
+  editNodeTitle,
+  setEditNodeTitle,
+}: EditModalProps) => {
+  return (
+    <Modal
+      title={`Edit ${col.type.charAt(0).toUpperCase() + col.type.slice(1)}`}
+      isOpen={editNodeModalOpen}
+      onClose={handleCancel}
+      primaryAction={EditFunction}
+      primaryActionTitle="Save"
+      secondaryAction={handleCancel}
+      secondaryActionTitle="Cancel"
+    >
+      <Input
+        type="text"
+        value={editNodeTitle}
+        onChange={(e) => setEditNodeTitle(e.target.value)}
+        placeholder="Label"
+        className="text-sm text-text-b-pri dark:text-text-w-pri px-4 py-2 bg-bg-light-sec dark:bg-bg-dark-sec rounded-md border border-stroke-light-ter focus:border-stroke-light-sec dark:border-stroke-dark-ter dark:focus:border-stroke-dark-sec outline-none w-full"
+      />
+    </Modal>
+  );
+};

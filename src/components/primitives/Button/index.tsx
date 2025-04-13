@@ -12,6 +12,8 @@ const buttonVariants = cva(
           "bg-primary border-[1px] border-primary text-text-w-pri hover:bg-primary/80 hover:border-primary/80",
         seconodary:
           "bg-bg-light-sec dark:bg-bg-dark-sec hover:bg-bg-light-ter dark:hover:bg-bg-dark-ter text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri",
+        destructive:
+          "bg-rose-500 border-[1px] border-rose-500 text-text-w-pri hover:bg-rose-500/80 hover:border-rose-500/80",
       },
       size: {
         default: "h-10 px-4 py-2",
