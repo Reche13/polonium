@@ -25,7 +25,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             {children}
           </ResizablePanel>
           <ResizableHandle />
-          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+          <ResizablePanel
+            defaultSize={20}
+            minSize={15}
+            maxSize={30}
+            className="hidden md:block"
+          >
             <Collection />
           </ResizablePanel>
         </ResizablePanelGroup>

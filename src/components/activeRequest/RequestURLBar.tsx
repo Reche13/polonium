@@ -102,7 +102,7 @@ const RequestURLBar = () => {
   };
 
   return (
-    <div className="w-full flex gap-2 p-4">
+    <div className="w-full flex flex-col md:flex-row gap-2 p-4">
       <div className="border border-stroke-light-ter dark:border-stroke-dark-ter rounded-lg flex items-center w-full  bg-bg-light-sec dark:bg-bg-dark-sec overflow-hidden">
         <Select
           value={activeRequest?.method}
@@ -136,10 +136,14 @@ const RequestURLBar = () => {
           className="text-xs text-text-b-pri border-none rounded-l-none bg-transparent h-full dark:text-text-w-pri px-4 py-2  outline-none w-full"
         />
       </div>
-      <Button onClick={handleSend}>Send</Button>
-      <Button onClick={handleSave} variant="seconodary">
-        Save
-      </Button>
+      <div className="flex gap-2 items-center">
+        <Button onClick={handleSend} className="w-full">
+          Send
+        </Button>
+        <Button onClick={handleSave} variant="seconodary" className="w-full">
+          Save
+        </Button>
+      </div>
 
       <Modal
         title="Save to Collection"
