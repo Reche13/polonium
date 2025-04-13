@@ -9,6 +9,45 @@
   margin: 0;
   box-sizing: border-box;
 }
+:root {
+  --color-primary: #10b981;
+}
+
+[data-theme="green"] {
+  --color-primary: #10b981;
+}
+
+[data-theme="teal"] {
+  --color-primary: #14b8a6;
+}
+
+[data-theme="blue"] {
+  --color-primary: #3b82f6;
+}
+
+[data-theme="indigo"] {
+  --color-primary: #6366f1;
+}
+
+[data-theme="violet"] {
+  --color-primary: #a855f7;
+}
+
+[data-theme="yellow"] {
+  --color-primary: #f59e0b;
+}
+
+[data-theme="orange"] {
+  --color-primary: #f97316;
+}
+
+[data-theme="red"] {
+  --color-primary: #ef4444;
+}
+
+[data-theme="pink"] {
+  --color-primary: #ec4899;
+}
 
 html,
 body {
