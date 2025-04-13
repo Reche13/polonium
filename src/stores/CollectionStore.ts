@@ -12,6 +12,7 @@ interface CollectionStore {
   updateRequest: (id: string, updates: Partial<SavedRequest>) => void;
   deleteNode: (id: string) => void;
   openRequestInTab: (requestId: string) => void;
+  saveRequestFromTab: (tabId: string, parentFolderId?: string | null) => void;
 }
 
 export const useCollectionStore = create<CollectionStore>((set, get) => ({
@@ -89,15 +90,21 @@ export const useCollectionStore = create<CollectionStore>((set, get) => ({
   },
 
   updateRequest: (id, updates) => {
+    console.log(updates);
     set((state) => {
       const updatedSavedRequest = {
         ...state.savedRequests[id],
         ...updates,
       };
-
-      const newCollections = updates.title
-        ? updateNodeInTree(state.collections, id, updates.title)
-        : state.collections;
+      const newCollections =
+        updates.title || updates.method
+          ? updateNodeInTree(
+              state.collections,
+              id,
+              updates.title,
+              updates.method
+            )
+          : state.collections;
 
       return {
         savedRequests: {
@@ -124,6 +131,40 @@ export const useCollectionStore = create<CollectionStore>((set, get) => ({
       requestState: "NOT_STARTED",
       selectedOptionNav: "PARAMS",
       SelectedResponseNav: "PRETTY",
+    });
+  },
+
+  saveRequestFromTab: (tabId: string, parentFolderId?: string | null) => {
+    const tab = useRequestTabStore.getState().tabs.find((t) => t.id === tabId);
+    if (!tab) return;
+
+    const parentId = parentFolderId ?? findParentId(get().collections, tabId);
+
+    set((state) => {
+      const isExisting = !!state.savedRequests[tab.id];
+      const savedRequests = {
+        ...state.savedRequests,
+        [tab.id]: {
+          ...state.savedRequests[tab.id],
+          ...tab,
+        },
+      };
+
+      const collections = isExisting
+        ? updateNodeInTree(state.collections, tab.id, tab.title, tab.method)
+        : insertIntoTree(
+            state.collections,
+            {
+              id: tab.id,
+              type: "request",
+              requestId: tab.id,
+              method: tab.method,
+              name: tab.title || "Untitled",
+            },
+            parentId
+          );
+
+      return { savedRequests, collections };
     });
   },
 }));
@@ -183,20 +224,34 @@ const insertIntoTree = (
 const updateNodeInTree = (
   tree: CollectionNode[],
   nodeId: string,
-  updatedName: string
+  updatedName?: string,
+  updatedMethod?: Method
 ): CollectionNode[] => {
   return tree.map((node) => {
     if (node.id === nodeId) {
-      return {
-        ...node,
-        name: updatedName,
-      };
+      if (node.type === "request") {
+        return {
+          ...node,
+          name: updatedName ?? node.name,
+          method: updatedMethod ?? node.method,
+        };
+      } else {
+        return {
+          ...node,
+          name: updatedName ?? node.name,
+        };
+      }
     }
 
     if (node.type === "folder") {
       return {
         ...node,
-        children: updateNodeInTree(node.children, nodeId, updatedName),
+        children: updateNodeInTree(
+          node.children,
+          nodeId,
+          updatedName,
+          updatedMethod
+        ),
       };
     }
 
