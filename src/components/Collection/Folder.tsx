@@ -1,11 +1,14 @@
 import { CollectionNode, useCollectionStore } from "@/stores/CollectionStore";
 import {
+  Copy,
+  Edit,
   EllipsisVertical,
   File,
   FilePlus,
   Folder as FolderClose,
   FolderOpen,
   FolderPlus,
+  Trash2,
 } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
@@ -17,7 +20,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../primitives/Dropdown";
-import { useRequestTabStore } from "@/stores/RequestTabStore";
 import { methodColors } from "@/constants/request";
 
 const Folder = ({ col }: { col: CollectionNode }) => {
@@ -94,6 +96,41 @@ const Folder = ({ col }: { col: CollectionNode }) => {
               {col.name}
             </span>
           </div>
+          <div className="py-2 px-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button>
+                  <EllipsisVertical size={16} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-bg-light-pri dark:bg-bg-dark-pri border-stroke-light-sec dark:border-stroke-dark-sec"
+              >
+                <DropdownMenuItem
+                  role="button"
+                  className="flex items-center gap-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
+                >
+                  <Edit size={16} />
+                  <span className="text-xs font-medium">Edit</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  role="button"
+                  className="flex items-center gap-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
+                >
+                  <Copy size={16} />
+                  <span className="text-xs font-medium">Duplicate</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  role="button"
+                  className="flex items-center gap-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
+                >
+                  <Trash2 size={16} />
+                  <span className="text-xs font-medium">Delete</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
     );
@@ -130,7 +167,7 @@ const Folder = ({ col }: { col: CollectionNode }) => {
               <DropdownMenuItem
                 role="button"
                 onClick={() => setRequestModalOpen(true)}
-                className="flex items-center gap-2 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
+                className="flex items-center gap-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
               >
                 <FilePlus size={16} />
                 <span className="text-xs font-medium">New Request</span>
@@ -138,7 +175,7 @@ const Folder = ({ col }: { col: CollectionNode }) => {
               <DropdownMenuItem
                 role="button"
                 onClick={() => setFolderModalOpen(true)}
-                className="flex items-center gap-2 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
+                className="flex items-center gap-4 text-text-b-sec dark:text-text-w-sec hover:text-text-b-pri dark:hover:text-text-w-pri px-4 py-2 rounded-sm hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec cursor-pointer"
               >
                 <FolderPlus size={16} />
                 <span className="text-xs font-medium">New Folder</span>
