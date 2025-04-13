@@ -1,5 +1,13 @@
 import { useTheme } from "next-themes";
 import React from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../primitives/Dropdown";
+import { Button } from "../primitives/Button";
+import { Moon, Sun } from "lucide-react";
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
@@ -10,14 +18,32 @@ const Header = () => {
       </span>
 
       {/* TODO: need to change this button later */}
-      <div>
-        <button
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white rounded"
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="seconodary" size="icon">
+            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          className="bg-bg-light-pri dark:bg-bg-dark-pri border-stroke-light-ter dark:border-stroke-dark-ter"
         >
-          {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
-        </button>
-      </div>
+          <DropdownMenuItem
+            onClick={() => setTheme("light")}
+            className="cursor-pointer hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec text-sm text-text-w-sec dark:text-text-w-sec"
+          >
+            Light
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => setTheme("dark")}
+            className="cursor-pointer hover:bg-bg-light-sec dark:hover:bg-bg-dark-sec text-sm text-text-w-sec dark:text-text-w-sec"
+          >
+            Dark
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
