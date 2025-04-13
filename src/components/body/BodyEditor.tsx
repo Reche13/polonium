@@ -31,7 +31,7 @@ const myFoldGutter = foldGutter({
 const BodyEditor = ({ value, onChange, type = "application/json" }: Props) => {
   const { theme } = useTheme();
 
-  const bodyTheme = createBodyTheme(theme ?? "light", type);
+  const bodyTheme = createBodyTheme(theme ?? "dark", type);
 
   return (
     <ReactCodeMirror
