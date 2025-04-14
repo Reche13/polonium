@@ -8,11 +8,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/primitives/Dropdown";
-import { Paintbrush } from "lucide-react";
 import clsx from "clsx";
 
 const colorThemes = [
-  { name: "Emerald", value: "emerald", color: "#10b981" },
+  { name: "Green", value: "green", color: "#10b981" },
   { name: "Teal", value: "teal", color: "#14b8a6" },
   { name: "Blue", value: "blue", color: "#3b82f6" },
   { name: "Indigo", value: "indigo", color: "#6366f1" },
@@ -24,7 +23,7 @@ const colorThemes = [
 ];
 
 export default function ColorPicker() {
-  const [colorTheme, setColorTheme] = useState("blue");
+  const [colorTheme, setColorTheme] = useState("green");
 
   const handleChangeTheme = (theme: string) => {
     setColorTheme(theme);
