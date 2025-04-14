@@ -7,7 +7,7 @@ const page = () => {
         Coming Soon
       </span>
       <p className="text-xs font-normal text-text-b-sec dark:text-text-w-sec">
-        This project is still is development. Supprt for Websockets and other
+        This project is still in development. Support for Websockets and other
         realtime options coming soon.
       </p>
     </div>
